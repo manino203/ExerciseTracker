@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +16,7 @@ import com.example.exercisetracker.R
 @Composable
 fun AddButton(
     modifier: Modifier = Modifier,
-    onClick : () -> Unit
+    onClick: () -> Unit
 ) {
     RoundWithBorders(
         modifier,
@@ -30,8 +29,7 @@ fun AddButton(
 
                 .combinedClickable(
                     onClick = onClick
-                    )
-                ,
+                ),
             contentAlignment = Alignment.Center
         ) {
             Image(painter = painterResource(id = R.drawable.add), contentDescription = "add")

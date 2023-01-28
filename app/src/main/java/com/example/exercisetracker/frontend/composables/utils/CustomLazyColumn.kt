@@ -24,7 +24,7 @@ fun <T> CustomLazyColumn(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(data){
+        items(data) {
             item(it)
         }
         if (onAddClick != null) {

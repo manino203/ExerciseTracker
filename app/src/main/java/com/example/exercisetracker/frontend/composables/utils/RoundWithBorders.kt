@@ -20,7 +20,7 @@ fun RoundWithBorders(
     contentPadding: Dp = 16.dp,
     borderColor: Color = Color.Black,
     content: @Composable () -> Unit
-){
+) {
     val shape = RoundedCornerShape(roundCornerPercentage)
     Box(
         Modifier
@@ -28,7 +28,7 @@ fun RoundWithBorders(
             .clip(shape)
             .border(borderWidth, borderColor, shape = shape),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Box(
             Modifier.padding(contentPadding)
         )

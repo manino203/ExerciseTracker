@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.first
 class ExerciseDataRepository(
     private val context: Context,
     val gson: Gson
-    ) {
+) {
 
     companion object {
-        private const val FILE_NAME =  "exercises"
+        private const val FILE_NAME = "exercises"
         private val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences> by preferencesDataStore(
             FILE_NAME
         )
@@ -48,14 +48,10 @@ class ExerciseDataRepository(
         Log.d("dataStoreEdit: $key", "from: $old to: $newValue")
     }
 
-//    private inline fun <reified T : List<Any>> Gson.fromJson(json: String): T {
-//        return fromJson<T>(json, object : TypeToken<T>() {}.type)
-//    }
-
     suspend inline fun <reified itemType> readList(key: String): List<itemType> {
 
         return try {
-            val type = (object: TypeToken<List<itemType>>() {}).type
+            val type = (object : TypeToken<List<itemType>>() {}).type
             gson.fromJson(readValue(key), type)
         } catch (e: NullPointerException) {
             emptyList()
@@ -66,7 +62,6 @@ class ExerciseDataRepository(
 
         saveValue(key, Gson().toJson(newList))
     }
-
 
 
 }

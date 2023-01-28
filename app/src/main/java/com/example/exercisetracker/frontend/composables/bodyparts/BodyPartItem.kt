@@ -27,9 +27,7 @@ fun BodyPartItem(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
-
-                ,
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Text(text = label)

@@ -63,7 +63,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:+'
 
 
-
     implementation 'com.google.code.gson:gson:2.10.1'
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
@@ -86,6 +85,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.8.0"
 }
 
-kapt{
+kapt {
     correctErrorTypes true
 }

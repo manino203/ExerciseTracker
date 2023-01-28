@@ -4,7 +4,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,15 +31,15 @@ fun EditDialogContent(
             .wrapContentHeight(),
         shape = RoundedCornerShape(20)
 
-    ){
+    ) {
 
         Column(
             Modifier
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
-        ){
+        ) {
 
-            values.forEach{ data ->
+            values.forEach { data ->
                 var text by remember {
                     mutableStateOf(data.value)
                 }
@@ -63,7 +66,7 @@ fun EditDialogContent(
             }
 
             // delete
-            if (onDeleteClick != null){
+            if (onDeleteClick != null) {
                 RoundWithBorders(
                     Modifier
                         .fillMaxWidth()
@@ -92,14 +95,13 @@ fun EditDialogContent(
                         .weight(0.5f, true)
                         .combinedClickable(
                             enabled = values.all {
-                                                 it.value.isNotEmpty()
+                                it.value.isNotEmpty()
                             },
                             onClick = {
                                 onSaveClick(values[0].value)
                                 onDismiss()
                             }
-                        )
-                    , roundCornerPercentage = 50
+                        ), roundCornerPercentage = 50
                 ) {
                     Text("Save")
                 }
@@ -109,13 +111,12 @@ fun EditDialogContent(
                         .weight(0.5f, true)
                         .combinedClickable(
                             onClick = onDismiss
-                        )
-                    , roundCornerPercentage = 50
+                        ), roundCornerPercentage = 50
                 ) {
                     Text(
                         "Cancel",
 
-                    )
+                        )
                 }
             }
         }

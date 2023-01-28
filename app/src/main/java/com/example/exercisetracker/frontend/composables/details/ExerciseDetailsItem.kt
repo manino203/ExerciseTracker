@@ -22,7 +22,6 @@ fun ExerciseDetailsItem(
 ) {
 
 
-
     RoundWithBorders(
         modifier,
         roundCornerPercentage = 40,
@@ -39,12 +38,18 @@ fun ExerciseDetailsItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painter = painterResource(id = R.drawable.dumbbell), contentDescription = "weight")
+                    Image(
+                        painter = painterResource(id = R.drawable.dumbbell),
+                        contentDescription = "weight"
+                    )
                     Text("${details.weight} kg")
                 }
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painter = painterResource(id = R.drawable.repetitions), contentDescription = "repetitions")
+                    Image(
+                        painter = painterResource(id = R.drawable.repetitions),
+                        contentDescription = "repetitions"
+                    )
                     Text(details.repetitions.toString())
                 }
                 Column(

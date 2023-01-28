@@ -17,18 +17,19 @@ fun ExercisesScreen(
     onItemClick: (String) -> Unit
 ) {
 
-    var currentExercise by remember{
+    var currentExercise by remember {
         mutableStateOf(
             listOf(
                 EditDataWrapper(
                     TextFieldFormat.Str,
                     "Name",
-                    "")
+                    ""
+                )
             )
         )
     }
 
-    var dialogOpen by remember{
+    var dialogOpen by remember {
         mutableStateOf(false)
     }
 
@@ -36,46 +37,47 @@ fun ExercisesScreen(
         CenterLoading()
     } else {
 
-        if (dialogOpen){
+        if (dialogOpen) {
             Dialog(
                 onDismissRequest = {
-                dialogOpen = false
+                    dialogOpen = false
                 }
             ) {
                 EditDialogContent(
                     values = currentExercise,
                     onDismiss = {
                         dialogOpen = false
-                                },
+                    },
                     onSaveClick = addItem
 
-                                   )
+                )
             }
         }
 
-            CustomLazyColumn(
-                data = exercises,
-                onAddClick = {
+        CustomLazyColumn(
+            data = exercises,
+            onAddClick = {
+                dialogOpen = true
+            }
+        )
+        { exercise ->
+            ExerciseItem(
+                Modifier
+                    .fillMaxWidth(),
+                exercise,
+                onClick = onItemClick,
+                onLongClick = {
+                    currentExercise = listOf(
+                        EditDataWrapper(
+                            TextFieldFormat.Str,
+                            "Name",
+                            it
+                        )
+                    )
                     dialogOpen = true
                 }
             )
-            { exercise ->
-                ExerciseItem(
-                    Modifier
-                        .fillMaxWidth(),
-                    exercise,
-                    onClick = onItemClick,
-                    onLongClick = {
-                        currentExercise =  listOf(
-                            EditDataWrapper(
-                                TextFieldFormat.Str,
-                                "Name",
-                                it)
-                        )
-                        dialogOpen = true
-                    }
-                )
-            }
+        }
 
     }
 }

@@ -24,41 +24,46 @@ fun ExerciseItem(
     RoundWithBorders(
         modifier
             .combinedClickable(
-            onClick = { onClick(label) },
-            onLongClick = { onLongClick(label) }
-        ),
+                onClick = { onClick(label) },
+                onLongClick = { onLongClick(label) }
+            ),
         roundCornerPercentage = 40,
         contentPadding = 16.dp
-    ){
+    ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                ,
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Row(
                 Modifier
-                    .fillMaxSize()
-                    ,
-            horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                Column(Modifier.align(Alignment.CenterVertically),
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    Modifier.align(Alignment.CenterVertically),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
                     Text(text = label)
                 }
-                   Column(horizontalAlignment = Alignment.CenterHorizontally){
-                       Image(painterResource(id = R.drawable.dumbbell), contentDescription = "dumbbell")
-                       Text("20 kg")
-                   }
-                   Column(
-                       Modifier
-                           .padding(8.dp, 0.dp),
-                       horizontalAlignment = Alignment.CenterHorizontally
-                   ){
-                       Image(painterResource(id = R.drawable.repetitions), contentDescription = "repetitions")
-                       Text("10")
-                   } 
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painterResource(id = R.drawable.dumbbell),
+                        contentDescription = "dumbbell"
+                    )
+                    Text("20 kg")
+                }
+                Column(
+                    Modifier
+                        .padding(8.dp, 0.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painterResource(id = R.drawable.repetitions),
+                        contentDescription = "repetitions"
+                    )
+                    Text("10")
+                }
 
             }
         }

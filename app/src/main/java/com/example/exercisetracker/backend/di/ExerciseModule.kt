@@ -17,9 +17,13 @@ object ExerciseModule {
     @Singleton
     @Provides
     fun provideGson() = Gson()
+
     @Singleton
     @Provides
-    fun provideExerciseDataRepository(@ApplicationContext app: Context, gson: Gson): ExerciseDataRepository {
+    fun provideExerciseDataRepository(
+        @ApplicationContext app: Context,
+        gson: Gson
+    ): ExerciseDataRepository {
         return ExerciseDataRepository(app, gson)
     }
 }

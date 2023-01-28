@@ -14,7 +14,7 @@ fun ExerciseDetailsScreen(
     loading: MutableState<Boolean>,
     detailsList: SnapshotStateList<ExerciseDetails>,
     onAddClick: () -> Unit,
-    ) {
+) {
     if (loading.value) {
         CenterLoading()
     } else {

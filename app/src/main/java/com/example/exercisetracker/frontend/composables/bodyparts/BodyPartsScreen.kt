@@ -11,7 +11,7 @@ fun BodyPartsScreen(
 ) {
 
     CustomLazyColumn(data = bodyParts) {
-        BodyPartItem(label = it){
+        BodyPartItem(label = it) {
             onItemClick(it)
         }
     }

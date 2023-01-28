@@ -13,9 +13,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repo: ExerciseDataRepository)
-    : ViewModel() {
+class MainViewModel @Inject constructor(private val repo: ExerciseDataRepository) : ViewModel() {
 
     val bodyPartNames = mutableStateListOf(
         "Biceps",
@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(private val repo: ExerciseDataRepository
     var exercisesLoading = mutableStateOf(true)
 
 
-    fun getExercises(bodyPart: String){
+    fun getExercises(bodyPart: String) {
         viewModelScope.launch(Dispatchers.IO) {
             exercisesLoading.value = true
             exercises = repo.readList<String>(bodyPart).toMutableStateList()
@@ -40,20 +40,25 @@ class MainViewModel @Inject constructor(private val repo: ExerciseDataRepository
         }
     }
 
-    fun addExercise(bodyPart: String, name: String){
+    fun addExercise(bodyPart: String, name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (name !in exercises){
+            if (name !in exercises) {
                 exercises.add(name)
                 repo.saveList(bodyPart, exercises.toList())
             }
         }
     }
 
-    fun exerciseItemOnClick(path: String){
+    fun exerciseItemOnClick(path: String) {
         getDetails(path)
     }
 
-    fun addDetail(path: String, weight: Float, reps: Int, time: Long = Calendar.getInstance().timeInMillis){
+    fun addDetail(
+        path: String,
+        weight: Float,
+        reps: Int,
+        time: Long = Calendar.getInstance().timeInMillis
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             details.add(
                 ExerciseDetails(
