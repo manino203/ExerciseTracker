@@ -23,7 +23,11 @@ fun ExerciseDetailsItem(
 
 
 
-    RoundWithBorders(modifier, roundCornerPercentage = 40) {
+    RoundWithBorders(
+        modifier,
+        roundCornerPercentage = 40,
+        contentPadding = 16.dp
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize(),
@@ -31,8 +35,7 @@ fun ExerciseDetailsItem(
         ) {
             Row(
                 Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxSize(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {

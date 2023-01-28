@@ -22,11 +22,13 @@ fun BodyPartItem(
             .combinedClickable(
                 onClick = onClick
             ),
-        roundCornerPercentage = 40) {
+        roundCornerPercentage = 40,
+        contentPadding = 28.dp
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(28.dp)
+
                 ,
             contentAlignment = Alignment.Center
         ) {

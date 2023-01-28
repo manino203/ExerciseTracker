@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.first
 
 class ExerciseDataRepository(
     private val context: Context,
-    private val gson: Gson
+    val gson: Gson
     ) {
 
     companion object {
@@ -24,7 +24,7 @@ class ExerciseDataRepository(
 
     }
 
-    private suspend fun readValue(key: String, defaultValue: String = ""): String {
+    suspend fun readValue(key: String, defaultValue: String = ""): String {
 
 
         var result = defaultValue
@@ -52,19 +52,10 @@ class ExerciseDataRepository(
 //        return fromJson<T>(json, object : TypeToken<T>() {}.type)
 //    }
 
-    suspend fun <itemType> readList(key: String): List<itemType> {
+    suspend inline fun <reified itemType> readList(key: String): List<itemType> {
 
         return try {
             val type = (object: TypeToken<List<itemType>>() {}).type
-            gson.fromJson(readValue(key), type)
-        } catch (e: NullPointerException) {
-            emptyList()
-        }
-    }
-
-    suspend fun readDetailsList(key: String): List<ExerciseDetails> {
-        return try {
-            val type = (object: TypeToken<List<ExerciseDetails>>() {}).type
             gson.fromJson(readValue(key), type)
         } catch (e: NullPointerException) {
             emptyList()

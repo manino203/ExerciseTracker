@@ -63,7 +63,10 @@ class MainActivity : ComponentActivity() {
                                 loading = viewModel.exercisesLoading,
                                 exercises = viewModel.exercises,
                                 onAddClick = {
-                                    viewModel.addExercise(bodyPart, "test")
+//                                    viewModel.addExercise(bodyPart, "test")
+                                },
+                                addItem = {
+                                          viewModel.addExercise(bodyPart, it)
                                 },
                                 onItemClick = { exercise ->
                                     viewModel.exerciseItemOnClick(

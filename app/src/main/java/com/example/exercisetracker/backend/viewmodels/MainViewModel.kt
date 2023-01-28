@@ -42,8 +42,10 @@ class MainViewModel @Inject constructor(private val repo: ExerciseDataRepository
 
     fun addExercise(bodyPart: String, name: String){
         viewModelScope.launch(Dispatchers.IO) {
-            exercises.add(name)
-            repo.saveList(bodyPart, exercises.toList())
+            if (name !in exercises){
+                exercises.add(name)
+                repo.saveList(bodyPart, exercises.toList())
+            }
         }
     }
 
@@ -68,7 +70,7 @@ class MainViewModel @Inject constructor(private val repo: ExerciseDataRepository
     private fun getDetails(path: String) {
         viewModelScope.launch(Dispatchers.IO) {
             detailsLoading.value = true
-            details = repo.readDetailsList(path).toMutableStateList()
+            details = repo.readList<ExerciseDetails>(path).toMutableStateList()
             detailsLoading.value = false
         }
     }

@@ -18,21 +18,28 @@ import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
 fun ExerciseItem(
     modifier: Modifier = Modifier,
     label: String,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    onLongClick: (String) -> Unit
 ) {
-    RoundWithBorders(modifier, roundCornerPercentage = 40){
+    RoundWithBorders(
+        modifier
+            .combinedClickable(
+            onClick = { onClick(label) },
+            onLongClick = { onLongClick(label) }
+        ),
+        roundCornerPercentage = 40,
+        contentPadding = 16.dp
+    ){
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .combinedClickable(
-                    onClick = { onClick(label) }
-                ),
+                ,
             contentAlignment = Alignment.Center
         ) {
             Row(
                 Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    ,
             horizontalArrangement = Arrangement.SpaceBetween
             ){
                 Column(Modifier.align(Alignment.CenterVertically),
