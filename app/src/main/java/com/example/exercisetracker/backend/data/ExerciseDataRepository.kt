@@ -48,6 +48,15 @@ class ExerciseDataRepository(
         Log.d("dataStoreEdit: $key", "from: $old to: $newValue")
     }
 
+    suspend fun deleteValue(_key: String){
+        val key = stringPreferencesKey(_key)
+        context.dataStore.edit {
+            if (it.contains(key)){
+                it.remove(key)
+            }
+        }
+    }
+
     suspend inline fun <reified itemType> readList(key: String): List<itemType> {
 
         return try {

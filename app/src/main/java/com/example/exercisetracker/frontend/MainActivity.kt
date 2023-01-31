@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.exercisetracker.backend.data.Path
 import com.example.exercisetracker.backend.viewmodels.MainViewModel
 import com.example.exercisetracker.frontend.composables.bodyparts.BodyPartsScreen
 import com.example.exercisetracker.frontend.composables.details.ExerciseDetailsScreen
@@ -62,25 +63,30 @@ class MainActivity : ComponentActivity() {
                             ExercisesScreen(
                                 loading = viewModel.exercisesLoading,
                                 exercises = viewModel.exercises,
-                                onAddClick = {
-
-                                },
+                                bodyPart = bodyPart,
+                                onEdit = { newName, exercise ->
+                                    viewModel.editExercise(newName, exercise)
+                                }
+                                ,
                                 addItem = {
-                                    viewModel.addExercise(bodyPart, it)
+                                    viewModel.addExercise(it)
                                 },
                                 onItemClick = { exercise ->
-                                    viewModel.exerciseItemOnClick(
-                                        Route.Exercises.createPath(
+                                    viewModel.getDetails(
+                                        Path(
                                             bodyPart,
-                                            exercise
+                                            exercise.id
                                         )
                                     )
                                     navController.navigate(
                                         Route.ExerciseData.createRoute(
                                             bodyPart,
-                                            exercise
+                                            exercise.id
                                         )
                                     )
+                                },
+                                onDelete = {
+                                    viewModel.deleteExercise(it)
                                 }
                             )
                         }
@@ -93,25 +99,28 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val bodyPart by remember { mutableStateOf(it.arguments?.getString(Route.ExerciseData.args[0].name)!!) }
                             val exercise by remember { mutableStateOf(it.arguments?.getString(Route.ExerciseData.args[1].name)!!) }
-
+                            val path by remember {
+                                mutableStateOf(Path(bodyPart, exercise))
+                            }
                             ExerciseDetailsScreen(
                                 loading = viewModel.detailsLoading,
-                                detailsList = viewModel.details
-                            ) {
-
-                                viewModel.addDetail(
-                                    Route.ExerciseData.createPath(bodyPart, exercise),
-                                    15f,
-                                    5,
-                                    0
-                                )
-                            }
-                        }
+                                detailsList = viewModel.details,
+                                addItem = {
+                                    viewModel.addDetail(path, it)
+                                },
+                                editItem = { detail, index ->
+                                    viewModel.editDetail(detail, index, path)
+                                },
+                                deleteItem = {
+                                    viewModel.deleteDetail(it, path)
+                                }
+                            )
                     }
                 }
             }
         }
     }
+}
 }
 
 

@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -26,6 +27,9 @@ object ExerciseModule {
     ): ExerciseDataRepository {
         return ExerciseDataRepository(app, gson)
     }
+    @Provides
+    fun provideIODispatcher() = Dispatchers.IO
+
 }
 
 

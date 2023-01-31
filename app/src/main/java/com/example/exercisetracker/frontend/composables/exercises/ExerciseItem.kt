@@ -11,21 +11,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
+import com.example.exercisetracker.backend.data.Exercise
 import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExerciseItem(
     modifier: Modifier = Modifier,
-    label: String,
-    onClick: (String) -> Unit,
-    onLongClick: (String) -> Unit
+    exercise: Exercise,
+    index: Int,
+    onClick: (Exercise) -> Unit,
+    onLongClick: (Exercise) -> Unit
 ) {
     RoundWithBorders(
         modifier
             .combinedClickable(
-                onClick = { onClick(label) },
-                onLongClick = { onLongClick(label) }
+                onClick = { onClick(exercise) },
+                onLongClick = { onLongClick(exercise) }
             ),
         roundCornerPercentage = 40,
         contentPadding = 16.dp
@@ -44,7 +46,7 @@ fun ExerciseItem(
                     Modifier.align(Alignment.CenterVertically),
                     verticalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(text = label)
+                    Text(text = exercise.name)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(

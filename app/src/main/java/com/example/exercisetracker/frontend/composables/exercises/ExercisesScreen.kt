@@ -5,21 +5,24 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
+import com.example.exercisetracker.backend.data.Exercise
 import com.example.exercisetracker.frontend.composables.utils.*
 
 
 @Composable
 fun ExercisesScreen(
     loading: MutableState<Boolean>,
-    exercises: SnapshotStateList<String>,
-    onAddClick: () -> Unit,
-    addItem: (String) -> Unit,
-    onItemClick: (String) -> Unit
+    exercises: SnapshotStateList<Exercise>,
+    bodyPart: String,
+    onEdit: (String, Exercise) -> Unit,
+    addItem: (Exercise) -> Unit,
+    onItemClick: (Exercise) -> Unit,
+    onDelete: (Exercise) -> Unit
 ) {
 
-    var currentExercise by remember {
+    var currentEditData by remember {
         mutableStateOf(
-            listOf(
+            listOf<EditDataWrapper>(
                 EditDataWrapper(
                     TextFieldFormat.Str,
                     "Name",
@@ -27,6 +30,10 @@ fun ExercisesScreen(
                 )
             )
         )
+    }
+
+    var currentExercise by remember {
+        mutableStateOf<Exercise?>(null)
     }
 
     var dialogOpen by remember {
@@ -44,12 +51,31 @@ fun ExercisesScreen(
                 }
             ) {
                 EditDialogContent(
-                    values = currentExercise,
+                    currentValues = currentEditData,
                     onDismiss = {
                         dialogOpen = false
                     },
-                    onSaveClick = addItem
-
+                    onSaveClick = if (currentExercise == null) { it ->
+                        addItem(
+                            Exercise(
+                                it[0].value,
+                                bodyPart
+                            )
+                        )
+                    } else { data ->
+                        data.find {
+                            it.label == "Name"
+                        }?.let {
+                            onEdit(it.value, currentExercise!!)
+                        }
+                    },
+                    onDeleteClick = if (currentExercise == null) {
+                        null
+                    } else {
+                        {
+                            onDelete(currentExercise!!)
+                        }
+                    }
                 )
             }
         }
@@ -60,20 +86,22 @@ fun ExercisesScreen(
                 dialogOpen = true
             }
         )
-        { exercise ->
+        { index, exercise ->
             ExerciseItem(
                 Modifier
                     .fillMaxWidth(),
                 exercise,
+                index = index,
                 onClick = onItemClick,
                 onLongClick = {
-                    currentExercise = listOf(
+                    currentEditData = listOf(
                         EditDataWrapper(
                             TextFieldFormat.Str,
                             "Name",
-                            it
+                            it.name
                         )
                     )
+                    currentExercise = exercise
                     dialogOpen = true
                 }
             )

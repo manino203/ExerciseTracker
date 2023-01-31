@@ -19,7 +19,10 @@ fun AddButton(
     onClick: () -> Unit
 ) {
     RoundWithBorders(
-        modifier,
+        modifier
+            .combinedClickable(
+            onClick = onClick
+        ),
         40,
         contentPadding = 22.dp
     ) {
@@ -27,9 +30,7 @@ fun AddButton(
             Modifier
                 .fillMaxSize()
 
-                .combinedClickable(
-                    onClick = onClick
-                ),
+                ,
             contentAlignment = Alignment.Center
         ) {
             Image(painter = painterResource(id = R.drawable.add), contentDescription = "add")

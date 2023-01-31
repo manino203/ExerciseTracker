@@ -10,9 +10,12 @@ fun BodyPartsScreen(
     onItemClick: (String) -> Unit
 ) {
 
-    CustomLazyColumn(data = bodyParts) {
-        BodyPartItem(label = it) {
-            onItemClick(it)
+    CustomLazyColumn(data = bodyParts) {index, label ->
+        BodyPartItem(
+            label = label,
+            index = index
+        ) {
+            onItemClick(label)
         }
     }
 }

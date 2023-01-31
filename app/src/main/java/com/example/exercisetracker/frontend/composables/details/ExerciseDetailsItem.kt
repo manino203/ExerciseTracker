@@ -2,6 +2,7 @@ package com.example.exercisetracker.frontend.composables.details
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,11 +20,19 @@ import java.text.SimpleDateFormat
 fun ExerciseDetailsItem(
     modifier: Modifier = Modifier,
     details: ExerciseDetails,
+    index: Int,
+    onClick: (Int) -> Unit
 ) {
 
 
     RoundWithBorders(
-        modifier,
+        modifier
+            .combinedClickable(
+                onClick = {
+                    onClick(index)
+                }
+
+            ),
         roundCornerPercentage = 40,
         contentPadding = 16.dp
     ) {

@@ -1,6 +1,6 @@
 package com.example.exercisetracker.frontend.composables.utils
 
-class EditDataWrapper(
+data class EditDataWrapper(
     val format: TextFieldFormat,
     val label: String,
     var value: String

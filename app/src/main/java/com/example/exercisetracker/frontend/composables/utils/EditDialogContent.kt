@@ -12,18 +12,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.exercisetracker.backend.data.Exercise
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun EditDialogContent(
     modifier: Modifier = Modifier,
-    values: List<EditDataWrapper>,
+    currentValues: List<EditDataWrapper>,
     onDismiss: () -> Unit,
-    onSaveClick: (String) -> Unit,
-    onDeleteClick: (() -> Unit)? = null,
+    onSaveClick: (List<EditDataWrapper>) -> Unit,
+    onDeleteClick: (() -> Unit)? = null
 ) {
 
+
+    var newValues by remember {
+        mutableStateOf(
+            currentValues
+        )
+    }
 
     Surface(
         modifier
@@ -39,30 +46,34 @@ fun EditDialogContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            values.forEach { data ->
+            currentValues.forEachIndexed { index ,data ->
                 var text by remember {
                     mutableStateOf(data.value)
                 }
 
 
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(50),
-                    label = {
-                        Text(text = data.label)
-                    },
-                    value = text,
-                    onValueChange = { fieldVal ->
-                        if (data.format.correspondsWithFormat(fieldVal)) {
-                            data.value = fieldVal
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                    ) {
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            shape = RoundedCornerShape(50),
+                            label = {
+                                Text(text = data.label)
+                            },
+                            value = text,
+                            onValueChange = { fieldVal ->
+                                if (data.format.correspondsWithFormat(fieldVal)) {
+                                    newValues[index].value = fieldVal
 
-                            text = fieldVal
-                        }
+                                    text = fieldVal
+                                }
 
+                            }
+                        )
                     }
-                )
-
             }
 
             // delete
@@ -94,11 +105,11 @@ fun EditDialogContent(
                     Modifier
                         .weight(0.5f, true)
                         .combinedClickable(
-                            enabled = values.all {
+                            enabled = currentValues.all {
                                 it.value.isNotEmpty()
                             },
                             onClick = {
-                                onSaveClick(values[0].value)
+                                onSaveClick(newValues)
                                 onDismiss()
                             }
                         ), roundCornerPercentage = 50
