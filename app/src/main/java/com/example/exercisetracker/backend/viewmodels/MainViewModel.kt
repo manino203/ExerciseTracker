@@ -10,18 +10,16 @@ import com.example.exercisetracker.backend.data.Exercise
 import com.example.exercisetracker.backend.data.ExerciseDataRepository
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.backend.data.Path
-import com.example.exercisetracker.frontend.routes.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repo: ExerciseDataRepository,
     private val ioDispatcher: CoroutineDispatcher
-    ) : ViewModel() {
+) : ViewModel() {
 
 
     val bodyPartNames = mutableStateListOf(
@@ -56,9 +54,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun editExercise(newName: String, exercise: Exercise){
+    fun editExercise(newName: String, exercise: Exercise) {
 
-        viewModelScope.launch(ioDispatcher){
+        viewModelScope.launch(ioDispatcher) {
             exercisesLoading.value = true
             val index = exercises.indexOfFirst {
                 it.name == exercise.name
@@ -73,7 +71,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun deleteExercise(exercise: Exercise){
+    fun deleteExercise(exercise: Exercise) {
         viewModelScope.launch(ioDispatcher) {
             exercisesLoading.value = true
             repo.deleteValue(Path(exercise.bodyPart, exercise.id).get())
@@ -99,7 +97,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun editDetail(detail: ExerciseDetails, index: Int, path: Path){
+    fun editDetail(detail: ExerciseDetails, index: Int, path: Path) {
         viewModelScope.launch(ioDispatcher) {
             details[index] = detail
             details.sortByDescending {
@@ -109,7 +107,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun deleteDetail(index: Int, path: Path){
+    fun deleteDetail(index: Int, path: Path) {
         viewModelScope.launch(ioDispatcher) {
             details.removeAt(index)
             repo.saveList(path.get(), details.toList())

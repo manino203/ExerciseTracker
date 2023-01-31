@@ -10,12 +10,6 @@ sealed class Route(val destinationName: String, val args: List<NamedNavArgument>
 
     fun createRoute(vararg args: String) = "$destinationName${args.joinToString { "/$it" }}"
 
-//    fun createPath(vararg args: String) =
-//        if (args.isEmpty()) destinationName else args.joinToString("/").apply {
-//            slice(1 until length)
-//        }
-
-
     object BodyParts : Route("BodyParts")
     object Exercises : Route(
         "Exercises", listOf(

@@ -21,16 +21,14 @@ fun AddButton(
     RoundWithBorders(
         modifier
             .combinedClickable(
-            onClick = onClick
-        ),
+                onClick = onClick
+            ),
         40,
         contentPadding = 22.dp
     ) {
         Box(
             Modifier
-                .fillMaxSize()
-
-                ,
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Image(painter = painterResource(id = R.drawable.add), contentDescription = "add")

@@ -5,9 +5,9 @@ class Path(
     val exerciseId: String? = null
 ) {
     fun get(): String {
-        return if (exerciseId != null){
+        return if (exerciseId != null) {
             "$bodyPart/$exerciseId"
-        }else{
+        } else {
             bodyPart
         }
     }

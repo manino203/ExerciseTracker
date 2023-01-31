@@ -66,8 +66,7 @@ class MainActivity : ComponentActivity() {
                                 bodyPart = bodyPart,
                                 onEdit = { newName, exercise ->
                                     viewModel.editExercise(newName, exercise)
-                                }
-                                ,
+                                },
                                 addItem = {
                                     viewModel.addExercise(it)
                                 },
@@ -115,12 +114,12 @@ class MainActivity : ComponentActivity() {
                                     viewModel.deleteDetail(it, path)
                                 }
                             )
+                        }
                     }
                 }
             }
         }
     }
-}
 }
 
 

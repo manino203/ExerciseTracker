@@ -5,7 +5,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
-import com.example.exercisetracker.backend.data.Exercise
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.*
 
@@ -78,7 +77,8 @@ fun ExerciseDetailsScreen(
                                     data[1].value.toInt(),
                                     0L
                                 ),
-                                it.second)
+                                it.second
+                            )
                         }
 
                     },
@@ -86,9 +86,9 @@ fun ExerciseDetailsScreen(
                         null
                     } else {
                         {
-                         currentDetails?.let{
-                             deleteItem(it.second)
-                         }
+                            currentDetails?.let {
+                                deleteItem(it.second)
+                            }
 
                         }
                     }

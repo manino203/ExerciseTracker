@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.exercisetracker.backend.data.Exercise
 
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -46,34 +45,34 @@ fun EditDialogContent(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            currentValues.forEachIndexed { index ,data ->
+            currentValues.forEachIndexed { index, data ->
                 var text by remember {
                     mutableStateOf(data.value)
                 }
 
 
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                    ) {
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(50),
-                            label = {
-                                Text(text = data.label)
-                            },
-                            value = text,
-                            onValueChange = { fieldVal ->
-                                if (data.format.correspondsWithFormat(fieldVal)) {
-                                    newValues[index].value = fieldVal
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(50),
+                        label = {
+                            Text(text = data.label)
+                        },
+                        value = text,
+                        onValueChange = { fieldVal ->
+                            if (data.format.correspondsWithFormat(fieldVal)) {
+                                newValues[index].value = fieldVal
 
-                                    text = fieldVal
-                                }
-
+                                text = fieldVal
                             }
-                        )
-                    }
+
+                        }
+                    )
+                }
             }
 
             // delete

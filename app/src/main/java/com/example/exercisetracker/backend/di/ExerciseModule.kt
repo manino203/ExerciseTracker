@@ -27,6 +27,7 @@ object ExerciseModule {
     ): ExerciseDataRepository {
         return ExerciseDataRepository(app, gson)
     }
+
     @Provides
     fun provideIODispatcher() = Dispatchers.IO
 
