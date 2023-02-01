@@ -1,13 +1,24 @@
 package com.example.exercisetracker.frontend.composables.details
 
-import androidx.compose.foundation.layout.fillMaxWidth
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.*
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ExerciseDetailsScreen(
     loading: MutableState<Boolean>,
@@ -16,24 +27,29 @@ fun ExerciseDetailsScreen(
     editItem: (ExerciseDetails, Int) -> Unit,
     deleteItem: (Int) -> Unit
 ) {
-
-    var currentEditData by remember {
+    val dateFormat = "dd/MM/yyyy"
+    val calendarState = rememberDatePickerState(Instant.now().toEpochMilli())
+    val currentEditData by remember {
         mutableStateOf(
-            listOf<EditDataWrapper>(
+            listOf(
                 EditDataWrapper(
                     TextFieldFormat.Float,
                     "Weight",
-                    ""
+                    mutableStateOf("")
                 ),
                 EditDataWrapper(
                     TextFieldFormat.Int,
                     "Reps",
-                    ""
+                    mutableStateOf("")
                 ),
                 EditDataWrapper(
                     TextFieldFormat.Date,
-                    "Timestamp",
-                    ""
+                    "Date",
+                    mutableStateOf(
+                        SimpleDateFormat(dateFormat).format(
+                            calendarState.selectedDateMillis ?: 0
+                        )
+                    )
                 )
             )
         )
@@ -47,6 +63,12 @@ fun ExerciseDetailsScreen(
         mutableStateOf(false)
     }
 
+    var calendarOpen by remember {
+        mutableStateOf(false)
+    }
+
+
+
     if (loading.value) {
         CenterLoading()
     } else {
@@ -54,28 +76,38 @@ fun ExerciseDetailsScreen(
             Dialog(
                 onDismissRequest = {
                     dialogOpen = false
+
                 }
             ) {
                 EditDialogContent(
                     currentValues = currentEditData,
+                    onCalendarClick = {
+                        calendarOpen = true
+                    },
                     onDismiss = {
                         dialogOpen = false
                     },
                     onSaveClick = if (currentDetails == null) { it ->
                         addItem(
+
+                            //prerobit
+
                             ExerciseDetails(
-                                it[0].value.toFloat(),
-                                it[1].value.toInt(),
-                                0L
+                                it[0].state.value.toFloat(),
+                                it[1].state.value.toInt(),
+                                calendarState.selectedDateMillis ?: 0
                             )
                         )
                     } else { data ->
                         currentDetails?.let {
                             editItem(
+
+                                //prerobit
+
                                 ExerciseDetails(
-                                    data[0].value.toFloat(),
-                                    data[1].value.toInt(),
-                                    0L
+                                    data[0].state.value.toFloat(),
+                                    data[1].state.value.toInt(),
+                                    calendarState.selectedDateMillis ?: 0
                                 ),
                                 it.second
                             )
@@ -95,6 +127,47 @@ fun ExerciseDetailsScreen(
                 )
             }
         }
+        if (calendarOpen) {
+            DatePickerDialog(
+                onDismissRequest = {
+                    calendarOpen = false
+                },
+                dismissButton = {
+                    Text(
+                        "Cancel",
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .combinedClickable(
+                                onClick = {
+                                    calendarOpen = false
+                                }
+                            )
+                    )
+
+                },
+                confirmButton = {
+                    Text(
+                        "OK",
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .combinedClickable(
+                                onClick = {
+
+                                    currentEditData[2].state.value =
+                                        SimpleDateFormat(dateFormat).format(
+                                            calendarState.selectedDateMillis ?: 0
+                                        )
+
+                                    calendarOpen = false
+                                }
+                            )
+                    )
+                }
+            ) {
+                DatePicker(datePickerState = calendarState)
+
+            }
+        }
         CustomLazyColumn(
             data = detailsList,
             onAddClick = {
@@ -108,24 +181,14 @@ fun ExerciseDetailsScreen(
                 details,
                 index,
                 onClick = {
+
+                    // reset values
+
                     dialogOpen = true
-                    currentEditData = listOf<EditDataWrapper>(
-                        EditDataWrapper(
-                            TextFieldFormat.Float,
-                            "Weight",
-                            "${details.weight}"
-                        ),
-                        EditDataWrapper(
-                            TextFieldFormat.Int,
-                            "Reps",
-                            "${details.repetitions}"
-                        ),
-                        EditDataWrapper(
-                            TextFieldFormat.Date,
-                            "Date",
-                            "${details.timestamp}"
-                        )
-                    )
+                    currentEditData[0].state.value = "${details.weight}"
+                    currentEditData[1].state.value = "${details.repetitions}"
+                    currentEditData[2].state.value =
+                        SimpleDateFormat(dateFormat).format(details.timestamp)
                     currentDetails = Pair(details, index)
                 }
             )

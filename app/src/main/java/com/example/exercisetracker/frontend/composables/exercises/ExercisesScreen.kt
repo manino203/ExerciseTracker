@@ -20,13 +20,13 @@ fun ExercisesScreen(
     onDelete: (Exercise) -> Unit
 ) {
 
-    var currentEditData by remember {
+    val currentEditData by remember {
         mutableStateOf(
             listOf<EditDataWrapper>(
                 EditDataWrapper(
                     TextFieldFormat.Str,
                     "Name",
-                    ""
+                    mutableStateOf("")
                 )
             )
         )
@@ -52,13 +52,16 @@ fun ExercisesScreen(
             ) {
                 EditDialogContent(
                     currentValues = currentEditData,
+                    onCalendarClick = {
+
+                    },
                     onDismiss = {
                         dialogOpen = false
                     },
                     onSaveClick = if (currentExercise == null) { it ->
                         addItem(
                             Exercise(
-                                it[0].value,
+                                it[0].state.value,
                                 bodyPart
                             )
                         )
@@ -66,7 +69,7 @@ fun ExercisesScreen(
                         data.find {
                             it.label == "Name"
                         }?.let {
-                            onEdit(it.value, currentExercise!!)
+                            onEdit(it.state.value, currentExercise!!)
                         }
                     },
                     onDeleteClick = if (currentExercise == null) {
@@ -94,13 +97,7 @@ fun ExercisesScreen(
                 index = index,
                 onClick = onItemClick,
                 onLongClick = {
-                    currentEditData = listOf(
-                        EditDataWrapper(
-                            TextFieldFormat.Str,
-                            "Name",
-                            it.name
-                        )
-                    )
+                    currentEditData[0].state.value = it.name
                     currentExercise = exercise
                     dialogOpen = true
                 }
