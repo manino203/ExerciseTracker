@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biceps">Biceps</string>
+    <string name="triceps">Triceps</string>
+    <string name="shoulders">Ramená</string>
+    <string name="chest">Cecky</string>
+    <string name="abs">Brucho</string>
+    <string name="back">Chrbát</string>
+    <string name="legs">Nohy</string>
+
+    <string name="name">Názov</string>
+    <string name="weight">Váha</string>
+    <string name="reps">Opakovania</string>
+    <string name="date">Dátum</string>
+
+    <string name="calendar">Kalendár</string>
+    <string name="save">Uložiť</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="delete">Vymazať</string>
+
+</resources>

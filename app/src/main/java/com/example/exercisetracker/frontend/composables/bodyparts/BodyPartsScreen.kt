@@ -2,20 +2,21 @@ package com.example.exercisetracker.frontend.composables.bodyparts
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.example.exercisetracker.backend.data.BodyPart
 import com.example.exercisetracker.frontend.composables.utils.CustomLazyColumn
 
 @Composable
 fun BodyPartsScreen(
-    bodyParts: SnapshotStateList<String>,
+    bodyParts: SnapshotStateList<BodyPart>,
     onItemClick: (String) -> Unit
 ) {
 
-    CustomLazyColumn(data = bodyParts) { index, label ->
+    CustomLazyColumn(data = bodyParts) { index, bp ->
         BodyPartItem(
-            label = label,
+            label = bp.label,
             index = index
         ) {
-            onItemClick(label)
+            onItemClick(bp.path)
         }
     }
 }

@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">Exercise Tracker</string>
+    <string name="app_name" translatable="false">Exercise Tracker</string>
+
+    <string name="biceps">Biceps</string>
+    <string name="triceps">Triceps</string>
+    <string name="shoulders">Shoulders</string>
+    <string name="chest">Chest</string>
+    <string name="abs">Abs</string>
+    <string name="back">Back</string>
+    <string name="legs">Legs</string>
+
+    <string name="name">Name</string>
+    <string name="weight">Weight</string>
+    <string name="reps">Reps</string>
+    <string name="date">Date</string>
+
+    <string name="calendar">Calendar</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="ok" translatable="false">OK</string>
+
 </resources>

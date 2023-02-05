@@ -1,16 +1,16 @@
 package com.example.exercisetracker.backend.viewmodels
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.exercisetracker.backend.data.Exercise
-import com.example.exercisetracker.backend.data.ExerciseDataRepository
-import com.example.exercisetracker.backend.data.ExerciseDetails
-import com.example.exercisetracker.backend.data.Path
+import com.example.exercisetracker.R
+import com.example.exercisetracker.backend.data.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,18 +18,20 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repo: ExerciseDataRepository,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    @ApplicationContext context: Context
 ) : ViewModel() {
 
 
-    val bodyPartNames = mutableStateListOf(
-        "Biceps",
-        "Triceps",
-        "Shoulders",
-        "Chest",
-        "Abs",
-        "Back",
-        "Legs"
+    val bodyParts = mutableStateListOf(
+
+        BodyPart("Biceps", context.getString(R.string.biceps)),
+        BodyPart("Triceps", context.getString(R.string.triceps)),
+        BodyPart("Shoulders", context.getString(R.string.shoulders)),
+        BodyPart("Chest", context.getString(R.string.chest)),
+        BodyPart("Abs", context.getString(R.string.abs)),
+        BodyPart("Back", context.getString(R.string.back)),
+        BodyPart("Legs", context.getString(R.string.legs)),
     )
     var details: SnapshotStateList<ExerciseDetails> = mutableStateListOf()
     var exercises: SnapshotStateList<Exercise> = mutableStateListOf()

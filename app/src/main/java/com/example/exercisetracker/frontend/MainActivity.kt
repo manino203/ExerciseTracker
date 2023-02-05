@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
                         composable(Route.BodyParts.route) {
 
-                            BodyPartsScreen(bodyParts = viewModel.bodyPartNames, onItemClick = {
+                            BodyPartsScreen(bodyParts = viewModel.bodyParts, onItemClick = {
                                 viewModel.getExercises(it)
                                 navController.navigate(Route.Exercises.createRoute(it))
                             })
@@ -58,12 +58,18 @@ class MainActivity : ComponentActivity() {
                             Route.Exercises.route,
                             Route.Exercises.args
                         ) {
-                            val bodyPart by remember { mutableStateOf(it.arguments?.getString(Route.Exercises.args[0].name)!!) }
+                            val bodyPartPath by remember {
+                                mutableStateOf(
+                                    it.arguments?.getString(
+                                        Route.Exercises.args[0].name
+                                    )!!
+                                )
+                            }
 
                             ExercisesScreen(
                                 loading = viewModel.exercisesLoading,
                                 exercises = viewModel.exercises,
-                                bodyPart = bodyPart,
+                                bodyPartPath = bodyPartPath,
                                 onEdit = { newName, exercise ->
                                     viewModel.editExercise(newName, exercise)
                                 },
@@ -73,13 +79,13 @@ class MainActivity : ComponentActivity() {
                                 onItemClick = { exercise ->
                                     viewModel.getDetails(
                                         Path(
-                                            bodyPart,
+                                            bodyPartPath,
                                             exercise.id
                                         )
                                     )
                                     navController.navigate(
                                         Route.ExerciseData.createRoute(
-                                            bodyPart,
+                                            bodyPartPath,
                                             exercise.id
                                         )
                                     )

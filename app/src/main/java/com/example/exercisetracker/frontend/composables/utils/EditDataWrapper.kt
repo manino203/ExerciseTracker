@@ -6,5 +6,5 @@ data class EditDataWrapper(
     val format: TextFieldFormat,
     val label: String,
     var state: MutableState<String>
-) {
-}
+)
+

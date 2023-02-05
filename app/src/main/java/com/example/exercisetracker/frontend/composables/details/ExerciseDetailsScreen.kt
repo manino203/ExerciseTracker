@@ -1,24 +1,22 @@
 package com.example.exercisetracker.frontend.composables.details
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
+import com.example.exercisetracker.R
+import com.example.exercisetracker.backend.data.DataClassFactory
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.*
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
 
-@RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExerciseDetailsScreen(
     loading: MutableState<Boolean>,
@@ -27,26 +25,33 @@ fun ExerciseDetailsScreen(
     editItem: (ExerciseDetails, Int) -> Unit,
     deleteItem: (Int) -> Unit
 ) {
+
+    val weightString = stringResource(id = R.string.weight)
+    val repsString = stringResource(id = R.string.reps)
+    val dateString = stringResource(id = R.string.date)
+
+
     val dateFormat = "dd/MM/yyyy"
     val calendarState = rememberDatePickerState(Instant.now().toEpochMilli())
     val currentEditData by remember {
         mutableStateOf(
-            listOf(
+            EditDataList(
                 EditDataWrapper(
                     TextFieldFormat.Float,
-                    "Weight",
+                    weightString,
                     mutableStateOf("")
                 ),
                 EditDataWrapper(
                     TextFieldFormat.Int,
-                    "Reps",
+                    repsString,
                     mutableStateOf("")
                 ),
                 EditDataWrapper(
                     TextFieldFormat.Date,
-                    "Date",
+                    dateString,
                     mutableStateOf(
-                        SimpleDateFormat(dateFormat).format(
+
+                        SimpleDateFormat(dateFormat, Locale.getDefault()).format(
                             calendarState.selectedDateMillis ?: 0
                         )
                     )
@@ -67,52 +72,43 @@ fun ExerciseDetailsScreen(
         mutableStateOf(false)
     }
 
-
+    val onDismiss = {
+        currentEditData.resetToDefaultValues()
+        dialogOpen = false
+    }
 
     if (loading.value) {
         CenterLoading()
     } else {
         if (dialogOpen) {
             Dialog(
-                onDismissRequest = {
-                    dialogOpen = false
-
-                }
+                onDismissRequest = onDismiss
             ) {
                 EditDialogContent(
-                    currentValues = currentEditData,
+                    currentValues = currentEditData.items,
                     onCalendarClick = {
                         calendarOpen = true
                     },
-                    onDismiss = {
-                        dialogOpen = false
-                    },
+                    onCancelClick = onDismiss,
                     onSaveClick = if (currentDetails == null) { it ->
                         addItem(
-
-                            //prerobit
-
-                            ExerciseDetails(
-                                it[0].state.value.toFloat(),
-                                it[1].state.value.toInt(),
+                            DataClassFactory.createExerciseDetails(
+                                it,
                                 calendarState.selectedDateMillis ?: 0
                             )
                         )
+                        onDismiss()
                     } else { data ->
                         currentDetails?.let {
                             editItem(
-
-                                //prerobit
-
-                                ExerciseDetails(
-                                    data[0].state.value.toFloat(),
-                                    data[1].state.value.toInt(),
+                                DataClassFactory.createExerciseDetails(
+                                    data,
                                     calendarState.selectedDateMillis ?: 0
                                 ),
                                 it.second
                             )
                         }
-
+                        onDismiss()
                     },
                     onDeleteClick = if (currentDetails == null) {
                         null
@@ -121,52 +117,30 @@ fun ExerciseDetailsScreen(
                             currentDetails?.let {
                                 deleteItem(it.second)
                             }
-
+                            onDismiss()
                         }
                     }
                 )
             }
         }
         if (calendarOpen) {
-            DatePickerDialog(
-                onDismissRequest = {
+            CalendarDialog(
+                calendarState = calendarState,
+                onDismiss = {
                     calendarOpen = false
                 },
-                dismissButton = {
-                    Text(
-                        "Cancel",
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .combinedClickable(
-                                onClick = {
-                                    calendarOpen = false
-                                }
-                            )
-                    )
+                onOkClick = {
+                    currentEditData.items[2].state.value =
+                        SimpleDateFormat(dateFormat, Locale.getDefault()).format(
+                            calendarState.selectedDateMillis ?: 0
+                        )
 
+                    calendarOpen = false
                 },
-                confirmButton = {
-                    Text(
-                        "OK",
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .combinedClickable(
-                                onClick = {
-
-                                    currentEditData[2].state.value =
-                                        SimpleDateFormat(dateFormat).format(
-                                            calendarState.selectedDateMillis ?: 0
-                                        )
-
-                                    calendarOpen = false
-                                }
-                            )
-                    )
+                onCancelClick = {
+                    calendarOpen = false
                 }
-            ) {
-                DatePicker(datePickerState = calendarState)
-
-            }
+            )
         }
         CustomLazyColumn(
             data = detailsList,
@@ -185,10 +159,10 @@ fun ExerciseDetailsScreen(
                     // reset values
 
                     dialogOpen = true
-                    currentEditData[0].state.value = "${details.weight}"
-                    currentEditData[1].state.value = "${details.repetitions}"
-                    currentEditData[2].state.value =
-                        SimpleDateFormat(dateFormat).format(details.timestamp)
+                    currentEditData.items[0].state.value = "${details.weight}"
+                    currentEditData.items[1].state.value = "${details.repetitions}"
+                    currentEditData.items[2].state.value =
+                        SimpleDateFormat(dateFormat, Locale.getDefault()).format(details.timestamp)
                     currentDetails = Pair(details, index)
                 }
             )
