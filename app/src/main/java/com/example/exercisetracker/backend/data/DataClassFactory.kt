@@ -11,7 +11,7 @@ class DataClassFactory {
 
         fun createExerciseDetails(data: DialogFormDataList, timestamp: Long): ExerciseDetails {
             return ExerciseDetails(
-                data.items [0].state.value.toFloat(),
+                data.items[0].state.value.toFloat(),
                 data.items[1].state.value.toInt(),
                 timestamp
             )

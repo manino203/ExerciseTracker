@@ -26,7 +26,7 @@ fun DialogButtons(
         Modifier
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-    ){
+    ) {
 
         // delete
         if (onDeleteClick != null) {

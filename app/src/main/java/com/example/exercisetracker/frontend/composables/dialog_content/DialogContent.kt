@@ -43,7 +43,7 @@ fun DialogContent(
 
     ) {
 
-        Column{
+        Column {
             DialogForm(
                 oldValues = currentValues,
                 newValues = newValues,
@@ -56,8 +56,8 @@ fun DialogContent(
                 onDeleteClick = onDeleteClick,
                 onSaveClick = {
                     onSaveClick(newValues)
-                              },
-                onCancelClick =  onCancelClick ,
+                },
+                onCancelClick = onCancelClick,
                 values = newValues
             )
 
@@ -65,9 +65,7 @@ fun DialogContent(
         }
 
 
-
-
-        }
+    }
 
 
 }

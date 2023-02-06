@@ -42,95 +42,95 @@ fun ExerciseItem(
         isExpanded = isExpanded,
         details = listOf(
             ExerciseDetails(
-                12f,0,0L
+                12f, 0, 0L
             ),
             ExerciseDetails(
-                24f,0,0L
+                24f, 0, 0L
             ),
             ExerciseDetails(
-                13f,0,0L
+                13f, 0, 0L
             ),
             ExerciseDetails(
-                52f,0,0L
+                52f, 0, 0L
             ),
             ExerciseDetails(
-                12f,0,0L
+                12f, 0, 0L
             ),
             ExerciseDetails(
-                24f,0,0L
+                24f, 0, 0L
             ),
             ExerciseDetails(
-                13f,0,0L
+                13f, 0, 0L
             ),
             ExerciseDetails(
-                52f,0,0L
+                52f, 0, 0L
             )
         )
     ) {
 
 
-    RoundWithBorders(
-        modifier
-            .combinedClickable(
-                onClick = { onClick(exercise) },
-                onLongClick = { onLongClick(exercise) }
-            ),
-        roundCornerPercentage = 40,
-        contentPadding = 16.dp
-    ) {
-        Row(
-            Modifier
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        RoundWithBorders(
+            modifier
+                .combinedClickable(
+                    onClick = { onClick(exercise) },
+                    onLongClick = { onLongClick(exercise) }
+                ),
+            roundCornerPercentage = 40,
+            contentPadding = 16.dp
         ) {
-
-            Text(
-                text = exercise.name,
-                color = MaterialTheme.colors.onPrimary
-            )
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Image(
-                    painterResource(id = R.drawable.dumbbell),
-                    contentDescription = stringResource(id = R.string.weight),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
-                )
-                Text(
-                    (if (exercise.latestDetails != null) "${exercise.latestDetails.weight} kg" else "").toString(),
-                    color = MaterialTheme.colors.onPrimary
-                )
-            }
-            Column(
+            Row(
                 Modifier
-                    .padding(8.dp, 0.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painterResource(id = R.drawable.repetitions),
-                    contentDescription = stringResource(id = R.string.reps),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
-                )
+
                 Text(
-                    (exercise.latestDetails?.reps ?: "").toString(),
+                    text = exercise.name,
                     color = MaterialTheme.colors.onPrimary
                 )
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painterResource(id = R.drawable.dumbbell),
+                        contentDescription = stringResource(id = R.string.weight),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+                    )
+                    Text(
+                        (if (exercise.latestDetails != null) "${exercise.latestDetails.weight} kg" else "").toString(),
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
+                Column(
+                    Modifier
+                        .padding(8.dp, 0.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painterResource(id = R.drawable.repetitions),
+                        contentDescription = stringResource(id = R.string.reps),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+                    )
+                    Text(
+                        (exercise.latestDetails?.reps ?: "").toString(),
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
+
+                Icon(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable { isExpanded = !isExpanded }
+                        .rotate(if (isExpanded) 180f else 0f),
+
+                    imageVector = Icons.Outlined.ArrowDropDown,
+                    contentDescription = "arrow-down",
+                    tint = MaterialTheme.colors.onPrimary
+                )
+
             }
 
-            Icon(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable { isExpanded = !isExpanded }
-                    .rotate(if (isExpanded) 180f else 0f),
-
-                imageVector = Icons.Outlined.ArrowDropDown,
-                contentDescription = "arrow-down",
-                tint = MaterialTheme.colors.onPrimary
-            )
 
         }
-
-
-    }
     }
 }

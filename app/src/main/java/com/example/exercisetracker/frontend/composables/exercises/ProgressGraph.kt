@@ -39,11 +39,11 @@ fun ProgressGraph(
                     dataPoints,
                     LinePlot.Connection(color = Color.Red),
                     LinePlot.Intersection(color = Color.Transparent),
-                    LinePlot.Highlight(color = Color.Yellow){
+                    LinePlot.Highlight(color = Color.Yellow) {
 //                    detaily sem
                     },
 
-                )
+                    )
             ),
             grid = LinePlot.Grid(Color.Gray, steps = ySteps),
             yAxis = LinePlot.YAxis(
@@ -59,7 +59,12 @@ fun ProgressGraph(
                         val value = DateFormatter.toDate(it.timestamp)
 
                         Text(
-                            text = "${value.subSequence(0, 6)}\n ${value.subSequence(6, value.length)}",
+                            text = "${value.subSequence(0, 6)}\n ${
+                                value.subSequence(
+                                    6,
+                                    value.length
+                                )
+                            }",
                             maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.caption,

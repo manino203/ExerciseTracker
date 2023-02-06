@@ -38,7 +38,7 @@ class MainViewModel @Inject constructor(
     var detailsLoading = mutableStateOf(true)
     var exercisesLoading = mutableStateOf(true)
 
-    private fun saveExercises(exercise: Exercise){
+    private fun saveExercises(exercise: Exercise) {
 
         viewModelScope.launch(ioDispatcher) {
             exercisesLoading.value = true
@@ -82,7 +82,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun saveDetails(path: Path){
+    private fun saveDetails(path: Path) {
         viewModelScope.launch(ioDispatcher) {
             detailsLoading.value = true
             details.sortByDescending {
@@ -99,20 +99,21 @@ class MainViewModel @Inject constructor(
             detailsLoading.value = false
         }
     }
+
     fun addDetail(
         path: Path,
         detail: ExerciseDetails
     ) {
 
-            details.add(
-                detail
-            )
-            saveDetails(path)
+        details.add(
+            detail
+        )
+        saveDetails(path)
     }
 
     fun editDetail(detail: ExerciseDetails, index: Int, path: Path) {
             details[index] = detail
-            saveDetails(path)
+        saveDetails(path)
     }
 
     fun deleteDetail(index: Int, path: Path) {

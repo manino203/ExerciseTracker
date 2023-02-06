@@ -6,14 +6,13 @@ import java.util.*
 class DateFormatter {
 
 
-
-    companion object{
+    companion object {
         const val dateFormat = "dd/MM/yyyy"
-        fun toDate(timestamp: Long): String{
+        fun toDate(timestamp: Long): String {
             return SimpleDateFormat(dateFormat, Locale.getDefault()).format(timestamp)
         }
 
-        fun toLong(date: String): Long{
+        fun toLong(date: String): Long {
             return 0L
         }
 
