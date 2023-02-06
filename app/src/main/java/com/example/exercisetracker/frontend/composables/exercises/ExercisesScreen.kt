@@ -9,6 +9,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.DataClassFactory
 import com.example.exercisetracker.backend.data.Exercise
+import com.example.exercisetracker.frontend.composables.dialog_content.DialogContent
 import com.example.exercisetracker.frontend.composables.utils.*
 
 
@@ -28,8 +29,8 @@ fun ExercisesScreen(
 
     val currentEditData by remember {
         mutableStateOf(
-            EditDataList(
-                EditDataWrapper(
+            DialogFormDataList(
+                DialogFormData(
                     TextFieldFormat.Str,
                     nameString,
                     mutableStateOf("")
@@ -46,8 +47,9 @@ fun ExercisesScreen(
         mutableStateOf(false)
     }
 
-    val onDismiss = {
+    val resetDialog = {
         currentEditData.resetToDefaultValues()
+        currentExercise = null
         dialogOpen = false
     }
 
@@ -57,14 +59,14 @@ fun ExercisesScreen(
 
         if (dialogOpen) {
             Dialog(
-                onDismissRequest = onDismiss
+                onDismissRequest = resetDialog
             ) {
-                EditDialogContent(
-                    currentValues = currentEditData.items,
+                DialogContent(
+                    currentValues = currentEditData,
                     onCalendarClick = {
 
                     },
-                    onCancelClick = onDismiss,
+                    onCancelClick = resetDialog,
                     onSaveClick = if (currentExercise == null) { it ->
                         addItem(
                             DataClassFactory.createExercise(
@@ -72,21 +74,17 @@ fun ExercisesScreen(
                                 bodyPartPath
                             )
                         )
-                        onDismiss()
-                    } else { data ->
-                        data.find {
-                            it.label == nameString
-                        }?.let {
-                            onEdit(it.state.value, currentExercise!!)
-                        }
-                        onDismiss()
+                        resetDialog()
+                    } else { data: DialogFormDataList ->
+                        onEdit(data.items[0].state.value, currentExercise!!)
+                        resetDialog()
                     },
                     onDeleteClick = if (currentExercise == null) {
                         null
                     } else {
                         {
                             onDelete(currentExercise!!)
-                            onDismiss()
+                            resetDialog()
                         }
                     }
                 )
@@ -96,6 +94,7 @@ fun ExercisesScreen(
         CustomLazyColumn(
             data = exercises,
             onAddClick = {
+                resetDialog()
                 dialogOpen = true
             }
         ) { index, exercise ->
@@ -106,9 +105,10 @@ fun ExercisesScreen(
                 index = index,
                 onClick = onItemClick,
                 onLongClick = {
-                    currentEditData.items[0].state.value = it.name
-                    currentExercise = exercise
                     dialogOpen = true
+                    currentEditData.items[0].state.value = exercise.name
+                    currentExercise = exercise
+
                 }
             )
         }

@@ -35,17 +35,14 @@ class ExerciseDataRepository(
                 result = savedValue
             }
         }
-        Log.d("dataStoreGet: $key", "got: $result")
         return result
     }
 
     private suspend fun saveValue(key: String, newValue: String) {
-        var old = ""
+
         context.dataStore.edit {
-            old = it[stringPreferencesKey(key)].toString()
             it[stringPreferencesKey(key)] = newValue
         }
-        Log.d("dataStoreEdit: $key", "from: $old to: $newValue")
     }
 
     suspend fun deleteValue(_key: String) {

@@ -70,7 +70,7 @@ fun ExerciseDetailsItem(
                         colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
                     )
                     Text(
-                        details.repetitions.toString(),
+                        details.reps.toString(),
                         color = MaterialTheme.colors.onPrimary
                     )
                 }

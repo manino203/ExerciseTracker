@@ -38,6 +38,14 @@ class MainViewModel @Inject constructor(
     var detailsLoading = mutableStateOf(true)
     var exercisesLoading = mutableStateOf(true)
 
+    private fun saveExercises(exercise: Exercise){
+
+        viewModelScope.launch(ioDispatcher) {
+            exercisesLoading.value = true
+            repo.saveList(exercise.bodyPart, exercises.toList())
+            exercisesLoading.value = false
+        }
+    }
 
     fun getExercises(bodyPart: String) {
         viewModelScope.launch(ioDispatcher) {
@@ -48,29 +56,20 @@ class MainViewModel @Inject constructor(
     }
 
     fun addExercise(exercise: Exercise) {
-        viewModelScope.launch(ioDispatcher) {
             if (exercise.name !in exercises.map { it.name }) {
                 exercises.add(exercise)
-                repo.saveList(exercise.bodyPart, exercises.toList())
+                saveExercises(exercise)
             }
-        }
     }
 
     fun editExercise(newName: String, exercise: Exercise) {
-
-        viewModelScope.launch(ioDispatcher) {
-            exercisesLoading.value = true
             val index = exercises.indexOfFirst {
                 it.name == exercise.name
             }
             if (index != -1) {
                 exercises[index] = exercises[index].copy(name = newName)
-                repo.saveList(exercise.bodyPart, exercises.toList())
+                saveExercises(exercise)
             }
-
-            exercisesLoading.value = false
-
-        }
     }
 
     fun deleteExercise(exercise: Exercise) {
@@ -83,30 +82,37 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun saveDetails(path: Path){
+        viewModelScope.launch(ioDispatcher) {
+            detailsLoading.value = true
+            details.sortByDescending {
+                it.timestamp
+            }
+            repo.saveList(path.get(), details.toList())
+
+            val index = exercises.indexOfFirst {
+                it.id == path.exerciseId
+            }
+
+            exercises[index] = exercises[index].copy(latestDetails = details.firstOrNull())
+            saveExercises(exercises[index])
+            detailsLoading.value = false
+        }
+    }
     fun addDetail(
         path: Path,
         detail: ExerciseDetails
     ) {
-        viewModelScope.launch(ioDispatcher) {
+
             details.add(
                 detail
             )
-            details.sortByDescending {
-                it.timestamp
-            }
-            repo.saveList(path.get(), details.toList())
-
-        }
+            saveDetails(path)
     }
 
     fun editDetail(detail: ExerciseDetails, index: Int, path: Path) {
-        viewModelScope.launch(ioDispatcher) {
             details[index] = detail
-            details.sortByDescending {
-                it.timestamp
-            }
-            repo.saveList(path.get(), details.toList())
-        }
+            saveDetails(path)
     }
 
     fun deleteDetail(index: Int, path: Path) {

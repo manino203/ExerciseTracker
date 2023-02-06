@@ -1,18 +1,18 @@
 package com.example.exercisetracker.backend.data
 
-import com.example.exercisetracker.frontend.composables.utils.EditDataWrapper
+import com.example.exercisetracker.frontend.composables.utils.DialogFormDataList
 
 class DataClassFactory {
     companion object {
 
-        fun createExercise(data: List<EditDataWrapper>, bodyPartPath: String): Exercise {
-            return Exercise(data[0].state.value, bodyPartPath)
+        fun createExercise(data: DialogFormDataList, bodyPartPath: String): Exercise {
+            return Exercise(data.items[0].state.value, bodyPartPath)
         }
 
-        fun createExerciseDetails(data: List<EditDataWrapper>, timestamp: Long): ExerciseDetails {
+        fun createExerciseDetails(data: DialogFormDataList, timestamp: Long): ExerciseDetails {
             return ExerciseDetails(
-                data[0].state.value.toFloat(),
-                data[1].state.value.toInt(),
+                data.items [0].state.value.toFloat(),
+                data.items[1].state.value.toInt(),
                 timestamp
             )
         }

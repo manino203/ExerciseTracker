@@ -1,13 +1,13 @@
 package com.example.exercisetracker.frontend.composables.utils
 
-class EditDataList(
-    vararg initialItems: EditDataWrapper
+class DialogFormDataList(
+    vararg initialItems: DialogFormData
 ) {
 
     private val defaultItemsValues = initialItems.map {
         it.state.value
     }.toList()
-    val items: List<EditDataWrapper> = initialItems.toList()
+    val items: List<DialogFormData> = initialItems.toList()
 
     fun resetToDefaultValues() {
         items.forEachIndexed { index, item ->

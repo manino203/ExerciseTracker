@@ -10,7 +10,9 @@ import androidx.compose.ui.window.Dialog
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.DataClassFactory
 import com.example.exercisetracker.backend.data.ExerciseDetails
+import com.example.exercisetracker.frontend.composables.dialog_content.DialogContent
 import com.example.exercisetracker.frontend.composables.utils.*
+import com.example.exercisetracker.frontend.composables.utils.DateFormatter.Companion.dateFormat
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
@@ -31,27 +33,27 @@ fun ExerciseDetailsScreen(
     val dateString = stringResource(id = R.string.date)
 
 
-    val dateFormat = "dd/MM/yyyy"
+
     val calendarState = rememberDatePickerState(Instant.now().toEpochMilli())
     val currentEditData by remember {
         mutableStateOf(
-            EditDataList(
-                EditDataWrapper(
+            DialogFormDataList(
+                DialogFormData(
                     TextFieldFormat.Float,
                     weightString,
                     mutableStateOf("")
                 ),
-                EditDataWrapper(
+                DialogFormData(
                     TextFieldFormat.Int,
                     repsString,
                     mutableStateOf("")
                 ),
-                EditDataWrapper(
+                DialogFormData(
                     TextFieldFormat.Date,
                     dateString,
                     mutableStateOf(
 
-                        SimpleDateFormat(dateFormat, Locale.getDefault()).format(
+                        DateFormatter.toDate(
                             calendarState.selectedDateMillis ?: 0
                         )
                     )
@@ -72,7 +74,8 @@ fun ExerciseDetailsScreen(
         mutableStateOf(false)
     }
 
-    val onDismiss = {
+    val resetDialog = {
+        currentDetails = null
         currentEditData.resetToDefaultValues()
         dialogOpen = false
     }
@@ -82,14 +85,14 @@ fun ExerciseDetailsScreen(
     } else {
         if (dialogOpen) {
             Dialog(
-                onDismissRequest = onDismiss
+                onDismissRequest = resetDialog
             ) {
-                EditDialogContent(
-                    currentValues = currentEditData.items,
+                DialogContent(
+                    currentValues = currentEditData,
                     onCalendarClick = {
                         calendarOpen = true
                     },
-                    onCancelClick = onDismiss,
+                    onCancelClick = resetDialog,
                     onSaveClick = if (currentDetails == null) { it ->
                         addItem(
                             DataClassFactory.createExerciseDetails(
@@ -97,7 +100,7 @@ fun ExerciseDetailsScreen(
                                 calendarState.selectedDateMillis ?: 0
                             )
                         )
-                        onDismiss()
+                        resetDialog()
                     } else { data ->
                         currentDetails?.let {
                             editItem(
@@ -108,7 +111,7 @@ fun ExerciseDetailsScreen(
                                 it.second
                             )
                         }
-                        onDismiss()
+                        resetDialog()
                     },
                     onDeleteClick = if (currentDetails == null) {
                         null
@@ -117,7 +120,7 @@ fun ExerciseDetailsScreen(
                             currentDetails?.let {
                                 deleteItem(it.second)
                             }
-                            onDismiss()
+                            resetDialog()
                         }
                     }
                 )
@@ -155,14 +158,11 @@ fun ExerciseDetailsScreen(
                 details,
                 index,
                 onClick = {
-
-                    // reset values
-
                     dialogOpen = true
                     currentEditData.items[0].state.value = "${details.weight}"
-                    currentEditData.items[1].state.value = "${details.repetitions}"
+                    currentEditData.items[1].state.value = "${details.reps}"
                     currentEditData.items[2].state.value =
-                        SimpleDateFormat(dateFormat, Locale.getDefault()).format(details.timestamp)
+                        DateFormatter.toDate(details.timestamp)
                     currentDetails = Pair(details, index)
                 }
             )
