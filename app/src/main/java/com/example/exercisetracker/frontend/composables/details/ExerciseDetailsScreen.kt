@@ -137,7 +137,7 @@ fun ExerciseDetailsScreen(
                     calendarOpen = false
                 },
                 onOkClick = {
-                    currentEditData.items[2].state.value =
+                    currentEditData.items[3].state.value =
                         SimpleDateFormat(dateFormat, Locale.getDefault()).format(
                             calendarState.selectedDateMillis ?: 0
                         )
@@ -165,7 +165,8 @@ fun ExerciseDetailsScreen(
                     dialogOpen = true
                     currentEditData.items[0].state.value = "${details.weight}"
                     currentEditData.items[1].state.value = "${details.reps}"
-                    currentEditData.items[2].state.value =
+                    currentEditData.items[2].state.value = "${details.series}"
+                    currentEditData.items[3].state.value =
                         DateFormatter.toDate(details.timestamp)
                     currentDetails = Pair(details, index)
                 }

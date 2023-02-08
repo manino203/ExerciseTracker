@@ -6,14 +6,17 @@ class DataClassFactory {
     companion object {
 
         fun createExercise(data: DialogFormDataList, bodyPartPath: String): Exercise {
-            return Exercise(data.items[0].state.value, bodyPartPath)
+            return Exercise(
+                name = data.items[0].state.value,
+                bodyPart = bodyPartPath
+            )
         }
 
         fun createExerciseDetails(data: DialogFormDataList, timestamp: Long): ExerciseDetails {
             return ExerciseDetails(
-                data.items[0].state.value.toFloat(),
-                data.items[1].state.value.toInt(),
-                data.items[2].state.value.toInt(),
+                weight = data.items[0].state.value.toFloat(),
+                reps = data.items[1].state.value.toInt(),
+                series = data.items[2].state.value.toInt(),
                 timestamp
             )
         }
