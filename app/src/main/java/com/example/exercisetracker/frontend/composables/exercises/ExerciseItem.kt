@@ -141,7 +141,11 @@ fun ExerciseItem(
         } else {
             ProgressGraph(
                 Modifier.fillMaxSize(),
-                details = exerciseDetails
+                details = exerciseDetails.apply {
+                    sortBy {
+                        it.timestamp
+                    }
+                }
             )
         }
     }
