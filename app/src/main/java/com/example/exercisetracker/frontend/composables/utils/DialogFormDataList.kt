@@ -1,8 +1,9 @@
 package com.example.exercisetracker.frontend.composables.utils
 
 class DialogFormDataList(
-    vararg initialItems: DialogFormData
-) {
+    vararg initialItems: DialogFormData,
+
+    ) {
 
     private val defaultItemsValues = initialItems.map {
         it.state.value

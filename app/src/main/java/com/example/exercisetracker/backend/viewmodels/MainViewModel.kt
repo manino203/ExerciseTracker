@@ -1,6 +1,7 @@
 package com.example.exercisetracker.backend.viewmodels
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -56,20 +57,20 @@ class MainViewModel @Inject constructor(
     }
 
     fun addExercise(exercise: Exercise) {
-            if (exercise.name !in exercises.map { it.name }) {
-                exercises.add(exercise)
-                saveExercises(exercise)
-            }
+        if (exercise.name !in exercises.map { it.name }) {
+            exercises.add(exercise)
+            saveExercises(exercise)
+        }
     }
 
     fun editExercise(newName: String, exercise: Exercise) {
-            val index = exercises.indexOfFirst {
-                it.name == exercise.name
-            }
-            if (index != -1) {
-                exercises[index] = exercises[index].copy(name = newName)
-                saveExercises(exercise)
-            }
+        val index = exercises.indexOfFirst {
+            it.name == exercise.name
+        }
+        if (index != -1) {
+            exercises[index] = exercises[index].copy(name = newName)
+            saveExercises(exercise)
+        }
     }
 
     fun deleteExercise(exercise: Exercise) {
@@ -112,7 +113,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun editDetail(detail: ExerciseDetails, index: Int, path: Path) {
-            details[index] = detail
+        details[index] = detail
         saveDetails(path)
     }
 
@@ -123,11 +124,16 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getDetails(path: Path) {
+    fun getDetails(
+        path: Path,
+        loading: MutableState<Boolean> = detailsLoading,
+        _details: SnapshotStateList<ExerciseDetails> = details
+    ) {
         viewModelScope.launch(ioDispatcher) {
-            detailsLoading.value = true
-            details = repo.readList<ExerciseDetails>(path.get()).toMutableStateList()
-            detailsLoading.value = false
+            loading.value = true
+            _details.clear()
+            _details.addAll(repo.readList<ExerciseDetails>(path.get()).toMutableStateList())
+            loading.value = false
         }
     }
 }

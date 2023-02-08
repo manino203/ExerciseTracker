@@ -28,11 +28,10 @@ fun ExerciseDetailsScreen(
     deleteItem: (Int) -> Unit
 ) {
 
-    val weightString = stringResource(id = R.string.weight)
-    val repsString = stringResource(id = R.string.reps)
-    val dateString = stringResource(id = R.string.date)
-
-
+    val weightString = stringResource(R.string.weight)
+    val repsString = stringResource(R.string.reps)
+    val seriesString = stringResource(id = R.string.series)
+    val dateString = stringResource(R.string.date)
 
     val calendarState = rememberDatePickerState(Instant.now().toEpochMilli())
     val currentEditData by remember {
@@ -49,12 +48,17 @@ fun ExerciseDetailsScreen(
                     mutableStateOf("")
                 ),
                 DialogFormData(
+                    TextFieldFormat.Int,
+                    seriesString,
+                    mutableStateOf("")
+                ),
+                DialogFormData(
                     TextFieldFormat.Date,
                     dateString,
                     mutableStateOf(
 
                         DateFormatter.toDate(
-                            calendarState.selectedDateMillis ?: 0
+                            Instant.now().toEpochMilli()
                         )
                     )
                 )

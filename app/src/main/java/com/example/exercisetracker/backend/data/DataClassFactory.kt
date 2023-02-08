@@ -13,6 +13,7 @@ class DataClassFactory {
             return ExerciseDetails(
                 data.items[0].state.value.toFloat(),
                 data.items[1].state.value.toInt(),
+                data.items[2].state.value.toInt(),
                 timestamp
             )
         }

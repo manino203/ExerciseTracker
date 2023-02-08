@@ -92,6 +92,13 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onDelete = {
                                     viewModel.deleteExercise(it)
+                                },
+                                onAccordionExpand = { exercise, loading, details ->
+                                    viewModel.getDetails(
+                                        Path(bodyPartPath, exercise.id),
+                                        loading,
+                                        details
+                                    )
                                 }
                             )
                         }

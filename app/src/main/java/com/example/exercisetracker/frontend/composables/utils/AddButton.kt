@@ -36,7 +36,7 @@ fun AddButton(
             Image(
                 painter = painterResource(id = R.drawable.add),
                 contentDescription = "Plus",
-                colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
             )
         }
     }

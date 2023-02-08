@@ -9,6 +9,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.DataClassFactory
 import com.example.exercisetracker.backend.data.Exercise
+import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.dialog_content.DialogContent
 import com.example.exercisetracker.frontend.composables.utils.*
 
@@ -21,7 +22,8 @@ fun ExercisesScreen(
     onEdit: (String, Exercise) -> Unit,
     addItem: (Exercise) -> Unit,
     onItemClick: (Exercise) -> Unit,
-    onDelete: (Exercise) -> Unit
+    onDelete: (Exercise) -> Unit,
+    onAccordionExpand: (Exercise, MutableState<Boolean>, SnapshotStateList<ExerciseDetails>) -> Unit
 ) {
 
 
@@ -33,7 +35,9 @@ fun ExercisesScreen(
                 DialogFormData(
                     TextFieldFormat.Str,
                     nameString,
-                    mutableStateOf("")
+                    mutableStateOf(
+                        ""
+                    )
                 )
             )
         )
@@ -109,7 +113,8 @@ fun ExercisesScreen(
                     currentEditData.items[0].state.value = exercise.name
                     currentExercise = exercise
 
-                }
+                },
+                onExpand = onAccordionExpand
             )
         }
 

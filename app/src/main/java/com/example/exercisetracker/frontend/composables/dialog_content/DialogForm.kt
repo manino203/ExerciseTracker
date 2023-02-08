@@ -135,7 +135,7 @@ fun DialogForm(
                             ),
                         painter = painterResource(id = R.drawable.calendar),
                         contentDescription = stringResource(id = R.string.calendar),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
+                        colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
                     )
                 }
             }

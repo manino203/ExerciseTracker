@@ -11,11 +11,14 @@
     <string name="name">Názov</string>
     <string name="weight">Váha</string>
     <string name="reps">Opakovania</string>
+    <string name="series">Série</string>
     <string name="date">Dátum</string>
 
     <string name="calendar">Kalendár</string>
     <string name="save">Uložiť</string>
     <string name="cancel">Zrušiť</string>
     <string name="delete">Vymazať</string>
+
+    <string name="no_data_yet">Zatiaľ žiadne dáta.</string>
 
 </resources>

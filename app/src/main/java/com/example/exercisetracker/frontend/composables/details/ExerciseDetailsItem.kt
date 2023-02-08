@@ -39,52 +39,61 @@ fun ExerciseDetailsItem(
         roundCornerPercentage = 40,
         contentPadding = 16.dp
     ) {
-        Box(
-            modifier = Modifier
+        Row(
+            Modifier
                 .fillMaxSize(),
-            contentAlignment = Alignment.Center
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                Modifier
-                    .fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(
-                        painter = painterResource(id = R.drawable.dumbbell),
-                        contentDescription = stringResource(id = R.string.weight),
-                        colorFilter = ColorFilter.tint(
-                            MaterialTheme.colors.onPrimary
-                        )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Image(
+                    painter = painterResource(id = R.drawable.dumbbell),
+                    contentDescription = stringResource(id = R.string.weight),
+                    colorFilter = ColorFilter.tint(
+                        MaterialTheme.colors.background
                     )
-                    Text(
-                        "${details.weight} kg",
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                }
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(
-                        painter = painterResource(id = R.drawable.repetitions),
-                        contentDescription = stringResource(id = R.string.reps),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colors.onPrimary)
-                    )
-                    Text(
-                        details.reps.toString(),
-                        color = MaterialTheme.colors.onPrimary
-                    )
-                }
-                Column(
-                    Modifier.align(Alignment.CenterVertically)
                 )
-                {
-                    Text(
-                        SimpleDateFormat.getDateInstance().format(details.timestamp),
-                        color = MaterialTheme.colors.onPrimary
+                Text(
+                    "${details.weight} kg",
+                    color = MaterialTheme.colors.background
+                )
+            }
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Image(
+                    painter = painterResource(id = R.drawable.repetitions),
+                    contentDescription = stringResource(id = R.string.reps),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
+                )
+                Text(
+                    details.reps.toString(),
+                    color = MaterialTheme.colors.background
+                )
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Image(
+                    painter = painterResource(id = R.drawable.series),
+                    contentDescription = stringResource(id = R.string.series),
+                    colorFilter = ColorFilter.tint(
+                        MaterialTheme.colors.background
                     )
-                }
+                )
+                Text(
+                    "${details.series}",
+                    color = MaterialTheme.colors.background
+                )
+            }
+            Column(
+                Modifier.align(Alignment.CenterVertically)
+            )
+            {
+                Text(
+                    SimpleDateFormat.getDateInstance().format(details.timestamp),
+                    color = MaterialTheme.colors.background
+                )
             }
         }
+
     }
 
 }
