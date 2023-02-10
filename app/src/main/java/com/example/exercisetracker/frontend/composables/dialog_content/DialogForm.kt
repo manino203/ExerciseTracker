@@ -41,8 +41,7 @@ import com.example.exercisetracker.frontend.composables.utils.TextFieldFormat
 )
 @Composable
 fun DialogForm(
-    oldValues: DialogFormDataList,
-    newValues: DialogFormDataList,
+    values: DialogFormDataList,
     localFocusManager: FocusManager,
     keyboardController: SoftwareKeyboardController?,
     onCalendarClick: () -> Unit
@@ -55,10 +54,10 @@ fun DialogForm(
     ) {
 
         val lastIndex = remember {
-            if (oldValues.items.last().format == TextFieldFormat.Date) {
-                oldValues.items.lastIndex - 1
+            if (values.items.last().format == TextFieldFormat.Date) {
+                values.items.lastIndex - 1
             } else {
-                oldValues.items.lastIndex
+                values.items.lastIndex
             }
         }
 
@@ -68,7 +67,7 @@ fun DialogForm(
             focusRequester.requestFocus()
         }
 
-        oldValues.items.forEachIndexed { index, data ->
+        values.items.forEachIndexed { index, data ->
             val imeAction = if (index == lastIndex) {
                 ImeAction.Done
             } else ImeAction.Next
@@ -107,7 +106,6 @@ fun DialogForm(
 
                         if (data.format.correspondsWithFormat(fieldVal.text)) {
                             data.state.value = fieldVal.text
-                            newValues.items[index].state.value = fieldVal.text
                         }
 
                     },

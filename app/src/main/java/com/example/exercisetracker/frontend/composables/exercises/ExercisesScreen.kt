@@ -66,7 +66,7 @@ fun ExercisesScreen(
                 onDismissRequest = resetDialog
             ) {
                 DialogContent(
-                    currentValues = currentEditData,
+                    values = currentEditData,
                     onCalendarClick = {
 
                     },

@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -22,18 +19,13 @@ import com.example.exercisetracker.frontend.composables.utils.DialogFormDataList
 @Composable
 fun DialogContent(
     modifier: Modifier = Modifier,
-    currentValues: DialogFormDataList,
+    values: DialogFormDataList,
     onCalendarClick: () -> Unit,
     onSaveClick: (DialogFormDataList) -> Unit,
     onDeleteClick: (() -> Unit)? = null,
     onCancelClick: () -> Unit
 ) {
 
-    val newValues by remember {
-        mutableStateOf(
-            currentValues
-        )
-    }
 
     Surface(
         modifier
@@ -45,8 +37,7 @@ fun DialogContent(
 
         Column {
             DialogForm(
-                oldValues = currentValues,
-                newValues = newValues,
+                values = values,
                 localFocusManager = LocalFocusManager.current,
                 keyboardController = LocalSoftwareKeyboardController.current,
                 onCalendarClick = onCalendarClick
@@ -55,10 +46,10 @@ fun DialogContent(
             DialogButtons(
                 onDeleteClick = onDeleteClick,
                 onSaveClick = {
-                    onSaveClick(newValues)
+                    onSaveClick(values)
                 },
                 onCancelClick = onCancelClick,
-                values = newValues
+                values = values
             )
 
 
