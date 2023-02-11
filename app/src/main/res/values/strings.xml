@@ -9,6 +9,8 @@
     <string name="back">Back</string>
     <string name="legs">Legs</string>
 
+    <string name="plus">Add</string>
+
     <string name="name">Name</string>
     <string name="weight">Weight</string>
     <string name="reps">Reps</string>

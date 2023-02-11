@@ -2,22 +2,21 @@ package com.example.exercisetracker.frontend.composables.exercises
 
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter
-import com.example.exercisetracker.frontend.composables.utils.graph.DataPoint
-import com.example.exercisetracker.frontend.composables.utils.graph.LineGraph
-import com.example.exercisetracker.frontend.composables.utils.graph.LinePlot
+import com.example.exercisetracker.frontend.composables.utils.chart.*
+import com.example.exercisetracker.frontend.composables.utils.setAplha
 
 @Composable
 fun ProgressGraph(
@@ -26,13 +25,34 @@ fun ProgressGraph(
 ) {
 
 
-    val dataPoints = remember {
-        details.mapIndexed { index, exerciseDetails ->
-            DataPoint(((index + 1) * 3).toFloat(), exerciseDetails.weight)
+//    val dataPoints = remember {
+//        details.mapIndexed { index, exerciseDetails ->
+//            DataPoint(((index + 1) * 3).toFloat(), exerciseDetails.weight)
+//        }
+//    }
+//
+//    val ySteps = 5
+
+    val xAxis = remember {
+        details.map {
+            val date = DateFormatter.toDate(it.timestamp)
+            GraphData.String(
+                "${date.subSequence(0, 5)}\n ${
+                    date.subSequence(
+                        6,
+                        date.length
+                    )
+                }"
+            )
+
+
         }
     }
-
-    val ySteps = 5
+    val yAxis = remember {
+        details.map {
+            it.weight
+        }
+    }
 
     if (details.isEmpty()) {
         Box(
@@ -46,65 +66,65 @@ fun ProgressGraph(
             )
         }
     } else {
+        var currentItemIndex by remember {
+            mutableStateOf<Int?>(null)
+        }
         LineGraph(
-            bgColor = MaterialTheme.colors.onSurface,
-            plot = LinePlot(
-                listOf(
-                    LinePlot.Line(
-                        dataPoints,
-                        LinePlot.Connection(color = MaterialTheme.colors.primary),
-                        LinePlot.Intersection(color = MaterialTheme.colors.secondary),
-                        LinePlot.Highlight(color = Color.Yellow) {
-//                    detaily sem
-                        },
 
+            style = LineGraphStyle(
+                visibility = LinearGraphVisibility(
+                    isHeaderVisible = true,
+                    isCrossHairVisible = true,
+                    isXAxisLabelVisible = true,
+                    isYAxisLabelVisible = true,
+                ),
+                colors = LinearGraphColors(
+                    backgroundColor = MaterialTheme.colors.onBackground,
+                    fillGradient = Brush.verticalGradient(
+                        listOf(
+                            MaterialTheme.colors.primary.setAplha(0.5f),
+                            Color.Transparent
                         )
-                ),
-                grid = LinePlot.Grid(Color.Gray, steps = ySteps),
-                yAxis = LinePlot.YAxis(
-                    roundToInt = false,
-                    steps = ySteps,
-                    content = { min, offset, max ->
-                        for (it in 0 until ySteps) {
-                            val value = it * offset + min
-                            Text(
-                                text = value.toString(),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.caption,
-                                color = MaterialTheme.colors.surface
-                            )
-                        }
-                    }
-                ),
-                xAxis = LinePlot.XAxis(
-                    steps = details.size,
-                    content = { min, offset, max ->
-
-                        details.forEachIndexed { index, it ->
-
-                            val value = DateFormatter.toDate(it.timestamp)
-
-                            Text(
-                                text = "${value.subSequence(0, 6)}\n ${
-                                    value.subSequence(
-                                        6,
-                                        value.length
-                                    )
-                                }",
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.caption,
-                                color = MaterialTheme.colors.surface
-                            )
-                        }
-                    }
+                    ),
+                    crossHairColor = Color.Gray,
+                    clickHighlightColor = Color(0x88888888)
                 )
             ),
-            modifier = modifier,
-            onSelection = { xLine, points ->
-                // Do whatever you want here
+            xAxisData = xAxis,
+            yAxisData = yAxis,
+            isPointValuesVisible = true,
+            onPointClicked = { index ->
+                currentItemIndex = index
             }
-        )
+        ) {
+
+            Column {
+
+                Text(
+                    text = "${stringResource(id = R.string.reps)}: ${
+                        if (currentItemIndex != null) {
+                            details[currentItemIndex!!].reps.toString()
+                        } else {
+                            ""
+                        }
+                    }",
+                    color = MaterialTheme.colors.background
+                )
+
+                Text(
+                    text = "${stringResource(id = R.string.series)}: ${
+                        if (currentItemIndex != null) {
+                            details[currentItemIndex!!].series.toString()
+                        } else {
+                            ""
+                        }
+                    }",
+                    color = MaterialTheme.colors.background
+                )
+            }
+
+
+        }
     }
 }
+

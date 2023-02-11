@@ -25,7 +25,7 @@ fun BodyPartItem(
                 onClick = onClick
             ),
         roundCornerPercentage = 40,
-        contentPadding = 28.dp
+        contentPadding = PaddingValues(28.dp)
     ) {
         Box(
             modifier = Modifier

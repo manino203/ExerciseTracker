@@ -59,7 +59,7 @@ fun ExerciseItem(
                         onLongClick = { onLongClick(exercise) }
                     ),
                 roundCornerPercentage = 40,
-                contentPadding = 16.dp
+                contentPadding = PaddingValues(16.dp)
             ) {
                 Row(
                     Modifier

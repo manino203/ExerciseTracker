@@ -3,6 +3,7 @@ package com.example.exercisetracker.frontend.composables.exercises
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
@@ -26,8 +27,9 @@ fun Accordion(
             RoundWithBorders(
                 Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
-                roundCornerPercentage = 10
+                    .height(300.dp),
+                roundCornerPercentage = 10,
+                contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp)
             ) {
                 content()
             }
