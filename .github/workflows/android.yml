@@ -9,6 +9,8 @@ jobs:
   Gradle:
     runs-on: ubuntu-latest
     steps:
+      - name: zajebalo?
+        run: ls
       - name: Build Signed APK
         uses: victorbnl/build-signed-apk@main
         with:
