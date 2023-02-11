@@ -52,6 +52,18 @@ fun DialogButtons(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            //cancel
+            RoundWithBorders(
+                Modifier
+                    .weight(0.5f, true)
+                    .combinedClickable(
+                        onClick = onCancelClick
+                    ), roundCornerPercentage = 50
+            ) {
+                Text(
+                    stringResource(id = R.string.cancel)
+                )
+            }
             //save
             RoundWithBorders(
                 Modifier
@@ -67,18 +79,8 @@ fun DialogButtons(
             ) {
                 Text(stringResource(id = R.string.save))
             }
-            //cancel
-            RoundWithBorders(
-                Modifier
-                    .weight(0.5f, true)
-                    .combinedClickable(
-                        onClick = onCancelClick
-                    ), roundCornerPercentage = 50
-            ) {
-                Text(
-                    stringResource(id = R.string.cancel)
-                )
-            }
+
+
         }
     }
 
