@@ -2,48 +2,18 @@ name: Build & Publish Release APK
 
 on:
   push
+  
+
 
 jobs:
   Gradle:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout code
-      uses: actions/checkout@v2
-    - name: setup jdk
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Make Gradle executable
-      run: chmod +x ./gradlew
-    - name: Build Release APK
-      run: ./gradlew assembleRelease
-    - name: Releasing using Hub
-      uses: r0user/release-apk@main
-      env:
-       GITHUB_TOKEN: ${{ secrets.TOKEN }}
-       APP_FOLDER: app
-
-# jobs:
-#   Gradle:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: checkout code
-#       uses: actions/checkout@v2
-#     - name: setup jdk
-#       uses: actions/setup-java@v1
-#       with:
-#         java-version: 11
-#     - name: Make Gradle executable
-#       run: chmod +x ./gradlew
-#     - name: Build Release APK
-#       run: ./gradlew assembleRelease
-#     - name: Releasing using Hub
-#       uses: VladDaniliuk/action-release-releaseapk@master
-#       env:
-#        GITHUB_TOKEN: ${{ secrets.TOKEN }}
-#        VERSION_VARIABLE: versionName
-#        APP_FILE: ./app/build.gradle
-#        APP_FOLDER: ./app/release/app.apk
-#        CHANGELOG_FILE: ./CHANGELOG.md
-#        RELEASE_TITLE: Exercise Tracker
-#        NAME_VARIABLE: exercise_tracker-release.apk
+      - name: Build Signed APK
+        uses: victorbnl/build-signed-apk@main
+        with:
+          keystore_b64: ${{ secrets.keystore }}
+          keystore_password: ${{ secrets.keystore_password }}
+          key_alias: ${{ secrets.key_alias }}
+          key_password: ${{ secrets.key_password }}
+    
