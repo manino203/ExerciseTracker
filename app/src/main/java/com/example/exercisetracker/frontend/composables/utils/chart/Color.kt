@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.example.exercisetracker.frontend.composables.utils.chart
 
 import androidx.compose.ui.graphics.Color

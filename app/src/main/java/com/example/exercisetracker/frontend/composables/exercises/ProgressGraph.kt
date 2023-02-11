@@ -16,8 +16,9 @@ import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter
 import com.example.exercisetracker.frontend.composables.utils.chart.*
-import com.example.exercisetracker.frontend.composables.utils.setAplha
+import com.example.exercisetracker.frontend.composables.utils.setAlpha
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
 fun ProgressGraph(
     modifier: Modifier = Modifier,
@@ -82,7 +83,7 @@ fun ProgressGraph(
                     backgroundColor = MaterialTheme.colors.onBackground,
                     fillGradient = Brush.verticalGradient(
                         listOf(
-                            MaterialTheme.colors.primary.setAplha(0.5f),
+                            MaterialTheme.colors.primary.setAlpha(0.5f),
                             Color.Transparent
                         )
                     ),

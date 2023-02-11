@@ -1,7 +1,6 @@
 package com.example.exercisetracker.frontend.composables.exercises
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Accordion(
     modifier: Modifier = Modifier,

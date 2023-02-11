@@ -101,12 +101,11 @@ fun ExercisesScreen(
                 resetDialog()
                 dialogOpen = true
             }
-        ) { index, exercise ->
+        ) { _, exercise ->
             ExerciseItem(
                 Modifier
                     .fillMaxWidth(),
                 exercise,
-                index = index,
                 onClick = onItemClick,
                 onLongClick = {
                     dialogOpen = true

@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER")
+
 package com.example.exercisetracker.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme

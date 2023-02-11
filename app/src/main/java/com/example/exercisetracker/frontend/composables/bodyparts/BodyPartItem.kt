@@ -16,7 +16,6 @@ import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
 fun BodyPartItem(
     modifier: Modifier = Modifier,
     label: String,
-    index: Int,
     onClick: () -> Unit
 ) {
     RoundWithBorders(

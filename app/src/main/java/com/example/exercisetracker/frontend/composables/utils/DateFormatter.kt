@@ -12,10 +12,6 @@ class DateFormatter {
             return SimpleDateFormat(dateFormat, Locale.getDefault()).format(timestamp)
         }
 
-        fun toLong(date: String): Long {
-            return 0L
-        }
-
     }
 
 }

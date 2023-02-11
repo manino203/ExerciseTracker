@@ -32,7 +32,6 @@ import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
 fun ExerciseItem(
     modifier: Modifier = Modifier,
     exercise: Exercise,
-    index: Int,
     onClick: (Exercise) -> Unit,
     onLongClick: (Exercise) -> Unit,
     onExpand: (Exercise, MutableState<Boolean>, SnapshotStateList<ExerciseDetails>) -> Unit
@@ -41,7 +40,7 @@ fun ExerciseItem(
         mutableStateOf(false)
     }
 
-    var graphLoading = remember {
+    val graphLoading = remember {
         mutableStateOf(true)
     }
 
