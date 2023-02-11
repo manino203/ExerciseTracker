@@ -23,7 +23,7 @@ jobs:
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
        VERSION_VARIABLE: versionName
-       APP_FILE: buildSrc/Android.kt
+       APP_FILE: ./app/build.gradle
        APP_FOLDER: ./app/release/app.apk
        CHANGELOG_FILE: ./CHANGELOG.md
        RELEASE_TITLE: Exercise Tracker
