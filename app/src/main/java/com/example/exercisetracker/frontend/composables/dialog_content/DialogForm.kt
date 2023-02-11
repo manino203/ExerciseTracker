@@ -12,9 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -85,7 +83,15 @@ fun DialogForm(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
+                val enabled = data.format != TextFieldFormat.Date
+                var textValue by remember {
+                    mutableStateOf(
+                        TextFieldValue(
+                            data.state.value,
+                            selection = TextRange(data.state.value.length)
+                        )
+                    )
+                }
                 OutlinedTextField(
                     modifier = if (index == 0) {
                         Modifier.focusRequester(focusRequester)
@@ -97,14 +103,17 @@ fun DialogForm(
                     label = {
                         Text(text = data.label)
                     },
-                    enabled = data.format != TextFieldFormat.Date,
-                    value = TextFieldValue(
+                    enabled = enabled,
+                    value =
+                    if (enabled) textValue
+                    else TextFieldValue(
                         data.state.value,
                         selection = TextRange(data.state.value.length)
                     ),
                     onValueChange = { fieldVal ->
 
                         if (data.format.correspondsWithFormat(fieldVal.text)) {
+                            textValue = fieldVal
                             data.state.value = fieldVal.text
                         }
 
