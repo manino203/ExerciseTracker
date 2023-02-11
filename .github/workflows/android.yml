@@ -1,0 +1,31 @@
+name: Build & Publish Release APK
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  Gradle:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v2
+    - name: setup jdk
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Make Gradle executable
+      run: chmod +x ./gradlew
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+    - name: Releasing using Hub
+      uses: VladDaniliuk/action-release-releaseapk@master
+      env:
+       GITHUB_TOKEN: ${{ secrets.TOKEN }}
+       VERSION_VARIABLE: versionName
+       APP_FILE: buildSrc/Android.kt
+       APP_FOLDER: ./app/release/app.apk
+       CHANGELOG_FILE: ./CHANGELOG.md
+       RELEASE_TITLE: Exercise Tracker
+       NAME_VARIABLE: exercise_tracker-release.apk
