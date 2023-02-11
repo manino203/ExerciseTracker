@@ -8,7 +8,7 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('/home/manino/StudioProjects/ExerciseTracker/Key.jks')
+            storeFile file('./Key.jks')
             storePassword '#Pokemon12345'
             keyAlias 'key0'
             keyPassword '#Pokemon12345'
