@@ -6,11 +6,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -69,18 +69,17 @@ fun ExerciseItem(
 
                     Text(
                         text = exercise.name,
-                        color = MaterialTheme.colors.background
-                    )
+
+                        )
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Image(
                             painterResource(id = R.drawable.dumbbell),
                             contentDescription = stringResource(id = R.string.weight),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                         )
                         Text(
                             (if (exercise.latestDetails != null) "${exercise.latestDetails.weight} kg" else "").toString(),
-                            color = MaterialTheme.colors.background
                         )
                     }
                     Column(
@@ -91,11 +90,10 @@ fun ExerciseItem(
                         Image(
                             painterResource(id = R.drawable.repetitions),
                             contentDescription = stringResource(id = R.string.reps),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                         )
                         Text(
                             (exercise.latestDetails?.reps ?: "").toString(),
-                            color = MaterialTheme.colors.background
                         )
                     }
                     Column(
@@ -106,11 +104,10 @@ fun ExerciseItem(
                         Image(
                             painterResource(id = R.drawable.series),
                             contentDescription = stringResource(id = R.string.series),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                         )
                         Text(
                             (exercise.latestDetails?.series ?: "").toString(),
-                            color = MaterialTheme.colors.background
                         )
                     }
 
@@ -126,7 +123,7 @@ fun ExerciseItem(
 
                         imageVector = Icons.Outlined.ArrowDropDown,
                         contentDescription = "arrow-down",
-                        tint = MaterialTheme.colors.background
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
 
                 }

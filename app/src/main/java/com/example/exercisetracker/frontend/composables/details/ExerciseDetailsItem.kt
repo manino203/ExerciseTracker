@@ -4,8 +4,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,12 +50,11 @@ fun ExerciseDetailsItem(
                     painter = painterResource(id = R.drawable.dumbbell),
                     contentDescription = stringResource(id = R.string.weight),
                     colorFilter = ColorFilter.tint(
-                        MaterialTheme.colors.background
+                        MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Text(
-                    "${details.weight} kg",
-                    color = MaterialTheme.colors.background
+                    "${details.weight} kg"
                 )
             }
 
@@ -63,11 +62,10 @@ fun ExerciseDetailsItem(
                 Image(
                     painter = painterResource(id = R.drawable.repetitions),
                     contentDescription = stringResource(id = R.string.reps),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colors.background)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                 )
                 Text(
-                    details.reps.toString(),
-                    color = MaterialTheme.colors.background
+                    details.reps.toString()
                 )
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -75,12 +73,11 @@ fun ExerciseDetailsItem(
                     painter = painterResource(id = R.drawable.series),
                     contentDescription = stringResource(id = R.string.series),
                     colorFilter = ColorFilter.tint(
-                        MaterialTheme.colors.background
+                        MaterialTheme.colorScheme.onBackground
                     )
                 )
                 Text(
-                    "${details.series}",
-                    color = MaterialTheme.colors.background
+                    "${details.series}"
                 )
             }
             Column(
@@ -88,8 +85,7 @@ fun ExerciseDetailsItem(
             )
             {
                 Text(
-                    SimpleDateFormat.getDateInstance().format(details.timestamp),
-                    color = MaterialTheme.colors.background
+                    SimpleDateFormat.getDateInstance().format(details.timestamp)
                 )
             }
         }

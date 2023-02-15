@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +20,7 @@ fun RoundWithBorders(
     roundCornerPercentage: Int = 5,
     borderWidth: Dp = 2.dp,
     contentPadding: PaddingValues = PaddingValues(16.dp),
-    borderColor: Color = MaterialTheme.colors.background,
+    borderColor: Color = MaterialTheme.colorScheme.onBackground,
     content: @Composable () -> Unit
 ) {
     val shape = RoundedCornerShape(roundCornerPercentage)

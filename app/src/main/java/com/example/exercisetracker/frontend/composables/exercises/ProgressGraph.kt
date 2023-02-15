@@ -4,8 +4,8 @@ package com.example.exercisetracker.frontend.composables.exercises
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,7 +63,6 @@ fun ProgressGraph(
         ) {
             Text(
                 stringResource(id = R.string.no_data_yet),
-                color = MaterialTheme.colors.onPrimary
             )
         }
     } else {
@@ -80,15 +79,17 @@ fun ProgressGraph(
                     isYAxisLabelVisible = true,
                 ),
                 colors = LinearGraphColors(
-                    backgroundColor = MaterialTheme.colors.onBackground,
+                    backgroundColor = MaterialTheme.colorScheme.background,
                     fillGradient = Brush.verticalGradient(
                         listOf(
-                            MaterialTheme.colors.primary.setAlpha(0.5f),
+                            MaterialTheme.colorScheme.onPrimary.setAlpha(0.5f),
                             Color.Transparent
                         )
                     ),
+//                    lineColor = MaterialTheme.colorScheme.onPrimary,
+//                    pointColor = MaterialTheme.colorScheme.onPrimary,
                     crossHairColor = Color.Gray,
-                    clickHighlightColor = Color(0x88888888)
+                    clickHighlightColor = Color.Gray.setAlpha(0.5f)
                 )
             ),
             xAxisData = xAxis,
@@ -108,8 +109,7 @@ fun ProgressGraph(
                         } else {
                             ""
                         }
-                    }",
-                    color = MaterialTheme.colors.background
+                    }"
                 )
 
                 Text(
@@ -119,8 +119,7 @@ fun ProgressGraph(
                         } else {
                             ""
                         }
-                    }",
-                    color = MaterialTheme.colors.background
+                    }"
                 )
             }
 
