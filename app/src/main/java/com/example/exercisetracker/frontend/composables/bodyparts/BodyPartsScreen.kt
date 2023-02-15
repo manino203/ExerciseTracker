@@ -8,14 +8,29 @@ import com.example.exercisetracker.frontend.composables.utils.CustomLazyColumn
 @Composable
 fun BodyPartsScreen(
     bodyParts: SnapshotStateList<BodyPart>,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    onSwap: (Int, Int) -> Unit
 ) {
 
-    CustomLazyColumn(data = bodyParts) { _, bp ->
+
+    CustomLazyColumn(
+        data = bodyParts
+    ) { _, bp ->
+
         BodyPartItem(
             label = bp.label
         ) {
             onItemClick(bp.path)
         }
     }
+
+//    DragDropColumn(items = bodyParts, onSwap = onSwap) { bp ->
+//        BodyPartItem(
+//            label = bp.label
+//        ) {
+//            onItemClick(bp.path)
+//        }
+//    }
+
+
 }

@@ -104,6 +104,7 @@ fun DialogForm(
                         Text(text = data.label)
                     },
                     enabled = enabled,
+                    singleLine = true,
                     value =
                     if (enabled) textValue
                     else TextFieldValue(

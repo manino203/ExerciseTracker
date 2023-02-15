@@ -49,7 +49,16 @@ class MainActivity : ComponentActivity() {
                             BodyPartsScreen(bodyParts = viewModel.bodyParts, onItemClick = {
                                 viewModel.getExercises(it)
                                 navController.navigate(Route.Exercises.createRoute(it))
-                            })
+                            },
+                                onSwap = { from, to ->
+                                    if (from != to) {
+                                        val element = viewModel.bodyParts.removeAt(from)
+                                        viewModel.bodyParts.add(to, element)
+                                    }
+
+
+                                }
+                            )
                         }
 
                         //EXERCISES

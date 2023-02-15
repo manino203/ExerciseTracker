@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -60,75 +61,86 @@ fun ExerciseItem(
                 roundCornerPercentage = 40,
                 contentPadding = PaddingValues(16.dp)
             ) {
-                Row(
+
+                Column(
                     Modifier
                         .fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-
-                    Text(
-                        text = exercise.name,
-
-                        )
-
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painterResource(id = R.drawable.dumbbell),
-                            contentDescription = stringResource(id = R.string.weight),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                        )
-                        Text(
-                            (if (exercise.latestDetails != null) "${exercise.latestDetails.weight} kg" else "").toString(),
-                        )
-                    }
-                    Column(
+                    Row(
                         Modifier
-                            .padding(8.dp, 0.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painterResource(id = R.drawable.repetitions),
-                            contentDescription = stringResource(id = R.string.reps),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                        )
                         Text(
-                            (exercise.latestDetails?.reps ?: "").toString(),
+                            text = exercise.name
                         )
                     }
-                    Column(
+                    Divider()
+                    Row(
                         Modifier
-                            .padding(8.dp, 0.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painterResource(id = R.drawable.series),
-                            contentDescription = stringResource(id = R.string.series),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Image(
+                                painterResource(id = R.drawable.dumbbell),
+                                contentDescription = stringResource(id = R.string.weight),
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                            )
+                            Text(
+                                (if (exercise.latestDetails != null) "${exercise.latestDetails.weight} kg" else "").toString(),
+                            )
+                        }
+                        Column(
+                            Modifier
+                                .padding(8.dp, 0.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painterResource(id = R.drawable.repetitions),
+                                contentDescription = stringResource(id = R.string.reps),
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                            )
+                            Text(
+                                (exercise.latestDetails?.reps ?: "").toString(),
+                            )
+                        }
+                        Column(
+                            Modifier
+                                .padding(8.dp, 0.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painterResource(id = R.drawable.series),
+                                contentDescription = stringResource(id = R.string.series),
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                            )
+                            Text(
+                                (exercise.latestDetails?.series ?: "").toString(),
+                            )
+                        }
+                        Icon(
+                            modifier = Modifier
+                                .defaultMinSize(32.dp, 32.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    isExpanded = !isExpanded
+                                    onExpand(exercise, graphLoading, exerciseDetails)
+                                }
+                                .rotate(if (isExpanded) 180f else 0f),
+
+                            imageVector = Icons.Outlined.ArrowDropDown,
+                            contentDescription = "arrow-down",
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
-                        Text(
-                            (exercise.latestDetails?.series ?: "").toString(),
-                        )
+
+
                     }
-
-                    Icon(
-                        modifier = Modifier
-                            .defaultMinSize(32.dp, 32.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                isExpanded = !isExpanded
-                                onExpand(exercise, graphLoading, exerciseDetails)
-                            }
-                            .rotate(if (isExpanded) 180f else 0f),
-
-                        imageVector = Icons.Outlined.ArrowDropDown,
-                        contentDescription = "arrow-down",
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-
                 }
-
-
             }
         }
     ) {
