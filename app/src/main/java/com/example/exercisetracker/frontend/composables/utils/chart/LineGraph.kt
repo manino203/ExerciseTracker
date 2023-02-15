@@ -3,8 +3,8 @@ package com.example.exercisetracker.frontend.composables.utils.chart
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -72,8 +72,7 @@ fun LineGraph(
                 }
             }
             .pointerInput(Unit) {
-                detectTransformGestures { _, pan, _, _ ->
-
+                detectHorizontalDragGestures { _, dragAmount ->
 
                     val maxScroll = if (lineWidth - size.width > 0) {
                         -(lineWidth - size.width)
@@ -82,7 +81,7 @@ fun LineGraph(
                     }
 
                     scrollOffset =
-                        (scrollOffset + pan.x).coerceIn(
+                        (scrollOffset + dragAmount).coerceIn(
                             maxScroll,
                             minScroll
                         )
@@ -380,7 +379,7 @@ fun LineGraph(
 
 
             /**
-             * Drawing text labels over the y- axis
+             * Drawing rect at the start of graph
              */
             drawContext.canvas.nativeCanvas.drawRect(
                 -paddingLeft.toPx(),
@@ -391,6 +390,9 @@ fun LineGraph(
                     color = style.colors.backgroundColor.toArgb()
                 }
             )
+            /**
+             * Drawing text labels over the y- axis
+             */
             if (style.visibility.isYAxisLabelVisible) {
                 for (i in 0 until yAxisLabelList.size) {
                     drawContext.canvas.nativeCanvas.drawText(
