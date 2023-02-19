@@ -8,7 +8,7 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('./Key.jks')
+            storeFile file('/home/manino/StudioProjects/ExerciseTracker/app/Key.jks')
             storePassword '#Pokemon12345'
             keyAlias 'key0'
             keyPassword '#Pokemon12345'
@@ -59,6 +59,9 @@ android {
 
 
 dependencies {
+
+//    debugImplementation "androidx.customview:customview:1.2.0-alpha02"
+//    debugImplementation "androidx.customview:customview-poolingcontainer:1.0.0"
 
     implementation "androidx.compose.material3:material3:1.1.0-alpha06"
     implementation "androidx.compose.material3:material3-window-size-class:1.1.0-alpha06"

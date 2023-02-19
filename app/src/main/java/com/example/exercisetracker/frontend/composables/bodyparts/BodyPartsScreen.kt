@@ -8,13 +8,17 @@ import com.example.exercisetracker.frontend.composables.utils.ReorderableLazyCol
 fun BodyPartsScreen(
     bodyParts: List<BodyPart>,
     onItemClick: (String) -> Unit,
-    onSwap: (Int, Int) -> Unit
+    onSwap: (Int, Int) -> Unit,
+    onDragEnd: () -> Unit
 ) {
 
 
     ReorderableLazyColumn(
         data = bodyParts,
-        onSwap = onSwap
+        onSwap = onSwap,
+        onDragEnd = { _, _ ->
+            onDragEnd()
+        }
     ) { _, bp, dh ->
 
         BodyPartItem(
@@ -24,14 +28,5 @@ fun BodyPartsScreen(
             onItemClick(bp.path)
         }
     }
-
-//    DragDropColumn(items = bodyParts, onSwap = onSwap) { bp ->
-//        BodyPartItem(
-//            label = bp.label
-//        ) {
-//            onItemClick(bp.path)
-//        }
-//    }
-
 
 }

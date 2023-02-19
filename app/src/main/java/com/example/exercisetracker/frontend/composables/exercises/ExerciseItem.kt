@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.Exercise
 import com.example.exercisetracker.backend.data.ExerciseDetails
-import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
+import com.example.exercisetracker.frontend.composables.utils.Item
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -49,14 +49,16 @@ fun ExerciseItem(
     Accordion(
         isExpanded = isExpanded.value && canExpand.value,
         header = {
-            RoundWithBorders(
+            Item(
                 modifier
                     .combinedClickable(
                         onClick = { onClick(exercise) },
                         onLongClick = { onLongClick(exercise) }
                     ),
-                roundCornerPercentage = 10,
-                contentPadding = PaddingValues(16.dp)
+                contentPadding = 16.dp,
+                dragHandle = {
+                    dragHandle?.invoke()
+                }
             ) {
 
                 Column(
@@ -137,7 +139,6 @@ fun ExerciseItem(
 
 
                     }
-                    dragHandle?.invoke()
                 }
             }
         }

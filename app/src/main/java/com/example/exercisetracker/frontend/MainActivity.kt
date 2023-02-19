@@ -22,7 +22,7 @@ import com.example.exercisetracker.backend.viewmodels.MainViewModel
 import com.example.exercisetracker.frontend.composables.bodyparts.BodyPartsScreen
 import com.example.exercisetracker.frontend.composables.details.ExerciseDetailsScreen
 import com.example.exercisetracker.frontend.composables.exercises.ExercisesScreen
-import com.example.exercisetracker.frontend.routes.Route
+import com.example.exercisetracker.frontend.composables.utils.routes.Route
 import com.example.exercisetracker.ui.theme.ExerciseTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -52,6 +52,9 @@ class MainActivity : ComponentActivity() {
                             },
                                 onSwap = { from: Int, to: Int ->
                                     viewModel.onItemMove(viewModel.bodyParts, from, to)
+                                },
+                                onDragEnd = {
+
                                 }
                             )
                         }
@@ -103,6 +106,9 @@ class MainActivity : ComponentActivity() {
                                         from,
                                         to
                                     )
+                                },
+                                onDragEnd = {
+                                    viewModel.saveExercises(bodyPartPath)
                                 },
                                 onAccordionExpand = { exercise, loading, details ->
                                     viewModel.getDetails(

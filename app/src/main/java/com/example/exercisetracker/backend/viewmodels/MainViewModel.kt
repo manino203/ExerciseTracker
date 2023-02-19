@@ -34,6 +34,15 @@ class MainViewModel @Inject constructor(
         BodyPart("Legs", context.getString(R.string.legs)),
     )
 
+    // wip
+    fun getBodyParts(bodyPart: String) {
+        viewModelScope.launch(ioDispatcher) {
+            exercisesLoading.value = true
+            exercises = repo.readList<Exercise>(bodyPart).toMutableStateList()
+            exercisesLoading.value = false
+        }
+    }
+
     var details: SnapshotStateList<ExerciseDetails> = mutableStateListOf()
     var exercises: SnapshotStateList<Exercise> = mutableStateListOf()
     var detailsLoading = mutableStateOf(true)
@@ -47,11 +56,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun saveExercises(exercise: Exercise) {
+    fun saveExercises(path: String) {
 
         viewModelScope.launch(ioDispatcher) {
             exercisesLoading.value = true
-            repo.saveList(exercise.bodyPart, exercises.toList())
+            repo.saveList(path, exercises.toList())
             exercisesLoading.value = false
         }
     }
@@ -67,7 +76,7 @@ class MainViewModel @Inject constructor(
     fun addExercise(exercise: Exercise) {
         if (exercise.name !in exercises.map { it.name }) {
             exercises.add(0, exercise)
-            saveExercises(exercise)
+            saveExercises(exercise.bodyPart)
         }
     }
 
@@ -77,7 +86,7 @@ class MainViewModel @Inject constructor(
         }
         if (index != -1) {
             exercises[index] = exercises[index].copy(name = newName)
-            saveExercises(exercise)
+            saveExercises(exercise.bodyPart)
         }
     }
 
@@ -104,7 +113,7 @@ class MainViewModel @Inject constructor(
             }
 
             exercises[index] = exercises[index].copy(latestDetails = details.firstOrNull())
-            saveExercises(exercises[index])
+            saveExercises(exercises[index].bodyPart)
             detailsLoading.value = false
         }
     }

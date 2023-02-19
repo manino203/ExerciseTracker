@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
+import com.example.exercisetracker.frontend.composables.utils.Item
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -18,13 +18,15 @@ fun BodyPartItem(
     dragHandle: @Composable (() -> Unit)? = null,
     onClick: () -> Unit
 ) {
-    RoundWithBorders(
+    Item(
         modifier
             .combinedClickable(
                 onClick = onClick
             ),
-        roundCornerPercentage = 40,
-        contentPadding = PaddingValues(28.dp)
+        contentPadding = 28.dp,
+        dragHandle = {
+            dragHandle?.invoke()
+        }
     ) {
         Box(
             modifier = Modifier
@@ -36,7 +38,6 @@ fun BodyPartItem(
                     text = label,
                 )
 
-                dragHandle?.invoke()
 
             }
         }

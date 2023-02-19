@@ -1,4 +1,4 @@
-package com.example.exercisetracker.frontend.routes
+package com.example.exercisetracker.frontend.composables.utils.routes
 
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType

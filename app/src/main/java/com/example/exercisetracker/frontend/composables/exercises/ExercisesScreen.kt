@@ -32,6 +32,7 @@ fun ExercisesScreen(
     onItemClick: (Exercise) -> Unit,
     onDelete: (Exercise) -> Unit,
     onSwap: (Int, Int) -> Unit,
+    onDragEnd: () -> Unit,
     onAccordionExpand: (Exercise, MutableState<Boolean>, SnapshotStateList<ExerciseDetails>) -> Unit
 ) {
 
@@ -44,6 +45,7 @@ fun ExercisesScreen(
     val exerciseSize = exercises.size
 
     //FIX: java.lang.IllegalStateException: Reading a state that was created after the snapshot was taken or in a snapshot that has not yet been applied
+    // + IndexError
 
     val expandedStateList = remember {
         List(exerciseSize) {
@@ -136,6 +138,7 @@ fun ExercisesScreen(
             },
             onDragEnd = { _, _ ->
                 canExpand.value = true
+                onDragEnd()
             },
             onAddClick = {
                 resetDialog()

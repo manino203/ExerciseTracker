@@ -1,13 +1,11 @@
 package com.example.exercisetracker.frontend.composables.utils
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -18,27 +16,48 @@ fun Item(
     modifier: Modifier = Modifier,
     roundCornerPercentage: Int = 5,
     contentPadding: Dp = 16.dp,
+    dragHandle: @Composable (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     val shape = RoundedCornerShape(roundCornerPercentage)
 
     Card(
-        modifier,
+        modifier
+            ,
         shape = shape,
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
         ),
-//        border = CardDefaults.outlinedCardBorder(
-//            true
-//        )
+        border = CardDefaults.outlinedCardBorder(
+            true
+        )
 
     ) {
-        Box(
-            Modifier.padding(contentPadding)
-        )
-        {
-            content()
+        Column(
+            Modifier
+
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ){
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(contentPadding),
+                horizontalArrangement = Arrangement.Center
+            ){ content() }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+
+            ){ Divider(color = MaterialTheme.colorScheme.onSurface) }
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background),
+                horizontalArrangement = Arrangement.Center
+            ){ dragHandle?.invoke() }
         }
+
     }
 }
 
