@@ -1,4 +1,4 @@
-package com.example.exercisetracker.frontend.composables.utils
+package com.example.exercisetracker.frontend.composables.utils.dialogs
 
 class DialogFormDataList(
     vararg initialItems: DialogFormData,

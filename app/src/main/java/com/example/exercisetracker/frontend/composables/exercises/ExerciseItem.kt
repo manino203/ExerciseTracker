@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -25,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.Exercise
 import com.example.exercisetracker.backend.data.ExerciseDetails
-import com.example.exercisetracker.frontend.composables.utils.CenterLoading
 import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -35,11 +31,12 @@ fun ExerciseItem(
     exercise: Exercise,
     onClick: (Exercise) -> Unit,
     onLongClick: (Exercise) -> Unit,
+    dragHandle: @Composable (() -> Unit)? = null,
+    isExpanded: MutableState<Boolean> = mutableStateOf(false),
+    canExpand: MutableState<Boolean> = mutableStateOf(true),
     onExpand: (Exercise, MutableState<Boolean>, SnapshotStateList<ExerciseDetails>) -> Unit
 ) {
-    var isExpanded by remember {
-        mutableStateOf(false)
-    }
+
 
     val graphLoading = remember {
         mutableStateOf(true)
@@ -50,7 +47,7 @@ fun ExerciseItem(
     }
 
     Accordion(
-        isExpanded = isExpanded,
+        isExpanded = isExpanded.value && canExpand.value,
         header = {
             RoundWithBorders(
                 modifier
@@ -58,7 +55,7 @@ fun ExerciseItem(
                         onClick = { onClick(exercise) },
                         onLongClick = { onLongClick(exercise) }
                     ),
-                roundCornerPercentage = 40,
+                roundCornerPercentage = 10,
                 contentPadding = PaddingValues(16.dp)
             ) {
 
@@ -128,10 +125,10 @@ fun ExerciseItem(
                                 .defaultMinSize(32.dp, 32.dp)
                                 .clip(CircleShape)
                                 .clickable {
-                                    isExpanded = !isExpanded
+                                    isExpanded.value = !isExpanded.value
                                     onExpand(exercise, graphLoading, exerciseDetails)
                                 }
-                                .rotate(if (isExpanded) 180f else 0f),
+                                .rotate(if (isExpanded.value) 180f else 0f),
 
                             imageVector = Icons.Outlined.ArrowDropDown,
                             contentDescription = "arrow-down",
@@ -140,12 +137,19 @@ fun ExerciseItem(
 
 
                     }
+                    dragHandle?.invoke()
                 }
             }
         }
     ) {
         if (graphLoading.value) {
-            CenterLoading()
+            Box(
+                Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         } else {
             ProgressGraph(
                 Modifier.fillMaxSize(),

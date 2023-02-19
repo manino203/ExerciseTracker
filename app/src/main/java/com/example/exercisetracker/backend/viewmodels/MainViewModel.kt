@@ -25,7 +25,6 @@ class MainViewModel @Inject constructor(
 
 
     val bodyParts = mutableStateListOf(
-
         BodyPart("Biceps", context.getString(R.string.biceps)),
         BodyPart("Triceps", context.getString(R.string.triceps)),
         BodyPart("Shoulders", context.getString(R.string.shoulders)),
@@ -34,10 +33,19 @@ class MainViewModel @Inject constructor(
         BodyPart("Back", context.getString(R.string.back)),
         BodyPart("Legs", context.getString(R.string.legs)),
     )
+
     var details: SnapshotStateList<ExerciseDetails> = mutableStateListOf()
     var exercises: SnapshotStateList<Exercise> = mutableStateListOf()
     var detailsLoading = mutableStateOf(true)
     var exercisesLoading = mutableStateOf(true)
+
+    fun <T> onItemMove(items: SnapshotStateList<T>, fromIndex: Int, toIndex: Int) {
+        if (fromIndex != toIndex) {
+            items.apply {
+                add(toIndex, removeAt(fromIndex))
+            }
+        }
+    }
 
     private fun saveExercises(exercise: Exercise) {
 
@@ -58,7 +66,7 @@ class MainViewModel @Inject constructor(
 
     fun addExercise(exercise: Exercise) {
         if (exercise.name !in exercises.map { it.name }) {
-            exercises.add(exercise)
+            exercises.add(0, exercise)
             saveExercises(exercise)
         }
     }

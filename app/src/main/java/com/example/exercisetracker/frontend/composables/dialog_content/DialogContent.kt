@@ -10,7 +10,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import com.example.exercisetracker.frontend.composables.utils.DialogFormDataList
+import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogFormDataList
 
 
 @OptIn(

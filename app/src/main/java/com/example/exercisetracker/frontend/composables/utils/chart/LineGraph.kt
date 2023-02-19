@@ -304,30 +304,18 @@ fun LineGraph(
                 )
             )
 
-            /**
-             * highlighting clicks when user clicked on the canvas
-             */
-            clickedPoint?.let {
-                val circleRadius = 11.dp.toPx()
-                if (style.visibility.isCrossHairVisible) {
-                    drawLine(
-                        color = style.colors.crossHairColor,
-                        start = Offset(
-                            (it.x + scrollOffset + paddingLeft.toPx()),
-                            it.y + circleRadius
-                        ),
-                        end = Offset((it.x + scrollOffset + paddingLeft.toPx()), gridHeight),
-                        strokeWidth = 2.dp.toPx(),
-                        pathEffect = style.crossHairPathEffect
-                    )
-                }
-                drawCircle(
-                    color = style.colors.clickHighlightColor,
-                    center = Offset((it.x + scrollOffset + paddingLeft.toPx()), it.y),
-                    radius = circleRadius
-                )
 
-            }
+            /**
+             * drawing line connecting all circles/points
+             */
+            drawPoints(
+                points = offsetList.map {
+                    Offset((it.x + scrollOffset + paddingLeft.toPx()), it.y)
+                },
+                color = style.colors.lineColor,
+                pointMode = PointMode.Polygon,
+                strokeWidth = 2.dp.toPx(),
+            )
 
             /**
              * Plotting points on the Graph
@@ -364,19 +352,30 @@ fun LineGraph(
                 }
             }
 
-
             /**
-             * drawing line connecting all circles/points
+             * highlighting clicks when user clicked on the canvas
              */
-            drawPoints(
-                points = offsetList.map {
-                    Offset((it.x + scrollOffset + paddingLeft.toPx()), it.y)
-                },
-                color = style.colors.lineColor,
-                pointMode = PointMode.Polygon,
-                strokeWidth = 2.dp.toPx(),
-            )
+            clickedPoint?.let {
+                val circleRadius = 11.dp.toPx()
+                if (style.visibility.isCrossHairVisible) {
+                    drawLine(
+                        color = style.colors.crossHairColor,
+                        start = Offset(
+                            (it.x + scrollOffset + paddingLeft.toPx()),
+                            it.y + circleRadius
+                        ),
+                        end = Offset((it.x + scrollOffset + paddingLeft.toPx()), gridHeight),
+                        strokeWidth = 2.dp.toPx(),
+                        pathEffect = style.crossHairPathEffect
+                    )
+                }
+                drawCircle(
+                    color = style.colors.clickHighlightColor,
+                    center = Offset((it.x + scrollOffset + paddingLeft.toPx()), it.y),
+                    radius = circleRadius
+                )
 
+            }
 
             /**
              * Drawing rect at the start of graph

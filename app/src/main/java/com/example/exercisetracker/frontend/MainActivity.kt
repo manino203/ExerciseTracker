@@ -50,13 +50,8 @@ class MainActivity : ComponentActivity() {
                                 viewModel.getExercises(it)
                                 navController.navigate(Route.Exercises.createRoute(it))
                             },
-                                onSwap = { from, to ->
-                                    if (from != to) {
-                                        val element = viewModel.bodyParts.removeAt(from)
-                                        viewModel.bodyParts.add(to, element)
-                                    }
-
-
+                                onSwap = { from: Int, to: Int ->
+                                    viewModel.onItemMove(viewModel.bodyParts, from, to)
                                 }
                             )
                         }
@@ -101,6 +96,13 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onDelete = {
                                     viewModel.deleteExercise(it)
+                                },
+                                onSwap = { from: Int, to: Int ->
+                                    viewModel.onItemMove(
+                                        viewModel.exercises,
+                                        from,
+                                        to
+                                    )
                                 },
                                 onAccordionExpand = { exercise, loading, details ->
                                     viewModel.getDetails(

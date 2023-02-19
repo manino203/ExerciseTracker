@@ -1,6 +1,6 @@
 package com.example.exercisetracker.backend.data
 
-import com.example.exercisetracker.frontend.composables.utils.DialogFormDataList
+import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogFormDataList
 
 class DataClassFactory {
     companion object {

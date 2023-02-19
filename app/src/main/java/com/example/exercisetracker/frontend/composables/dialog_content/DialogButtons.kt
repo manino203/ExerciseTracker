@@ -10,8 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
-import com.example.exercisetracker.frontend.composables.utils.DialogFormDataList
 import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
+import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogFormDataList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

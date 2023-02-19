@@ -15,6 +15,7 @@ import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
 fun BodyPartItem(
     modifier: Modifier = Modifier,
     label: String,
+    dragHandle: @Composable (() -> Unit)? = null,
     onClick: () -> Unit
 ) {
     RoundWithBorders(
@@ -30,9 +31,14 @@ fun BodyPartItem(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = label,
-            )
+            Column {
+                Text(
+                    text = label,
+                )
+
+                dragHandle?.invoke()
+
+            }
         }
     }
 }

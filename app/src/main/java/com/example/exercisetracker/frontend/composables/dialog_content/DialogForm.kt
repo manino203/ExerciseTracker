@@ -30,8 +30,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
-import com.example.exercisetracker.frontend.composables.utils.DialogFormDataList
-import com.example.exercisetracker.frontend.composables.utils.TextFieldFormat
+import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogFormDataList
+import com.example.exercisetracker.frontend.composables.utils.dialogs.TextFieldFormat
 
 @OptIn(
     ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class,

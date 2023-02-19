@@ -1,4 +1,4 @@
-package com.example.exercisetracker.frontend.composables.utils
+package com.example.exercisetracker.frontend.composables.utils.dialogs
 
 import androidx.compose.ui.text.input.KeyboardType
 
@@ -6,6 +6,7 @@ sealed class TextFieldFormat {
 
     open fun correspondsWithFormat(s: String): Boolean = true
     open val keyboardType = KeyboardType.Text
+
     object Float : TextFieldFormat() {
 
         override val keyboardType: KeyboardType = KeyboardType.Number

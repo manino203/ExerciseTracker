@@ -1,4 +1,4 @@
-package com.example.exercisetracker.frontend.composables.utils
+package com.example.exercisetracker.frontend.composables.utils.dialogs
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -19,14 +19,12 @@ fun CalendarDialog(
     onCancelClick: () -> Unit
 
 ) {
-    val cancelString = stringResource(id = R.string.cancel)
-    val okString = stringResource(id = R.string.ok)
 
     DatePickerDialog(
         onDismissRequest = onDismiss,
         dismissButton = {
             Text(
-                cancelString,
+                stringResource(id = R.string.cancel),
                 modifier = Modifier
                     .padding(16.dp)
                     .combinedClickable(
@@ -37,7 +35,7 @@ fun CalendarDialog(
         },
         confirmButton = {
             Text(
-                okString,
+                stringResource(id = R.string.ok),
                 modifier = Modifier
                     .padding(16.dp)
                     .combinedClickable(
@@ -46,7 +44,7 @@ fun CalendarDialog(
             )
         }
     ) {
-        DatePicker(datePickerState = calendarState)
+        DatePicker(calendarState)
 
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.example.exercisetracker.R
@@ -13,6 +14,10 @@ import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.dialog_content.DialogContent
 import com.example.exercisetracker.frontend.composables.utils.*
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter.Companion.dateFormat
+import com.example.exercisetracker.frontend.composables.utils.dialogs.CalendarDialog
+import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogFormData
+import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogFormDataList
+import com.example.exercisetracker.frontend.composables.utils.dialogs.TextFieldFormat
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
@@ -84,78 +89,87 @@ fun ExerciseDetailsScreen(
         dialogOpen = false
     }
 
-    if (loading.value) {
-        CenterLoading()
-    } else {
-        if (dialogOpen) {
-            Dialog(
-                onDismissRequest = resetDialog
-            ) {
-                DialogContent(
-                    values = currentEditData,
-                    onCalendarClick = {
-                        calendarOpen = true
-                    },
-                    onCancelClick = resetDialog,
-                    onSaveClick = if (currentDetails == null) { it ->
-                        addItem(
-                            DataClassFactory.createExerciseDetails(
-                                it,
-                                calendarState.selectedDateMillis ?: 0
-                            )
-                        )
-                        resetDialog()
-                    } else { data ->
-                        currentDetails?.let {
-                            editItem(
-                                DataClassFactory.createExerciseDetails(
-                                    data,
-                                    calendarState.selectedDateMillis ?: 0
-                                ),
-                                it.second
-                            )
-                        }
-                        resetDialog()
-                    },
-                    onDeleteClick = if (currentDetails == null) {
-                        null
-                    } else {
-                        {
-                            currentDetails?.let {
-                                deleteItem(it.second)
-                            }
-                            resetDialog()
-                        }
-                    }
-                )
-            }
-        }
-        if (calendarOpen) {
-            CalendarDialog(
-                calendarState = calendarState,
-                onDismiss = {
-                    calendarOpen = false
+
+    if (dialogOpen) {
+        Dialog(
+            onDismissRequest = resetDialog
+        ) {
+            DialogContent(
+                values = currentEditData,
+                onCalendarClick = {
+                    calendarOpen = true
                 },
-                onOkClick = {
-                    currentEditData.items[3].state.value =
-                        SimpleDateFormat(dateFormat, Locale.getDefault()).format(
+                onCancelClick = resetDialog,
+                onSaveClick = if (currentDetails == null) { it ->
+                    addItem(
+                        DataClassFactory.createExerciseDetails(
+                            it,
                             calendarState.selectedDateMillis ?: 0
                         )
-
-                    calendarOpen = false
+                    )
+                    resetDialog()
+                } else { data ->
+                    currentDetails?.let {
+                        editItem(
+                            DataClassFactory.createExerciseDetails(
+                                data,
+                                calendarState.selectedDateMillis ?: 0
+                            ),
+                            it.second
+                        )
+                    }
+                    resetDialog()
                 },
-                onCancelClick = {
-                    calendarOpen = false
+                onDeleteClick = if (currentDetails == null) {
+                    null
+                } else {
+                    {
+                        currentDetails?.let {
+                            deleteItem(it.second)
+                        }
+                        resetDialog()
+                    }
                 }
             )
         }
-        CustomLazyColumn(
+    }
+    if (calendarOpen) {
+        CalendarDialog(
+            calendarState = calendarState,
+            onDismiss = {
+                calendarOpen = false
+            },
+            onOkClick = {
+                currentEditData.items[3].state.value =
+                    SimpleDateFormat(dateFormat, Locale.getDefault()).format(
+                        calendarState.selectedDateMillis ?: 0
+                    )
+
+                calendarOpen = false
+            },
+            onCancelClick = {
+                calendarOpen = false
+            }
+        )
+    }
+    Column(
+        Modifier.fillMaxSize()
+    ) {
+
+        LinearProgressIndicator(
+            Modifier
+                .fillMaxWidth(),
+            color = if (loading.value) ProgressIndicatorDefaults.linearColor else Color.Transparent,
+            trackColor = if (loading.value) ProgressIndicatorDefaults.linearTrackColor else Color.Transparent
+        )
+
+        ReorderableLazyColumn(
             data = detailsList,
             onAddClick = {
                 dialogOpen = true
             }
         )
-        { index, details ->
+        { index, details, _ ->
             ExerciseDetailsItem(
                 Modifier
                     .fillMaxWidth(),
@@ -172,6 +186,6 @@ fun ExerciseDetailsScreen(
                 }
             )
         }
-
     }
+
 }
