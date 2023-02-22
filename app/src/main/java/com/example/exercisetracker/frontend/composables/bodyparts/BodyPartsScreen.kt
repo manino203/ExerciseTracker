@@ -19,14 +19,17 @@ fun BodyPartsScreen(
         onDragEnd = { _, _ ->
             onDragEnd()
         }
-    ) { _, bp, dh ->
+    ) { _, bp, dh, elevation ->
 
         BodyPartItem(
             label = bp.label,
-            dragHandle = dh
+            dragModifier = dh,
+            elevation = elevation
         ) {
             onItemClick(bp.path)
         }
+
+
     }
 
 }

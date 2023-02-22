@@ -42,16 +42,12 @@ fun ExercisesScreen(
     val canExpand = remember {
         mutableStateOf(true)
     }
-    val exerciseSize = exercises.size
 
-    //FIX: java.lang.IllegalStateException: Reading a state that was created after the snapshot was taken or in a snapshot that has not yet been applied
-    // + IndexError
 
-    val expandedStateList = remember {
-        List(exerciseSize) {
-            mutableStateOf(false)
-        }
-    }
+    val expandedStates = remember {
+        mapOf<String, MutableState<Boolean>>()
+    }.toMutableMap()
+
 
     val currentEditData by remember {
         mutableStateOf(
@@ -131,8 +127,8 @@ fun ExercisesScreen(
                 onSwap(from, to)
             },
             onDragStart = {
-                expandedStateList.forEach {
-                    it.value = false
+                expandedStates.forEach {
+                    it.value.value = false
                 }
                 canExpand.value = false
             },
@@ -144,7 +140,10 @@ fun ExercisesScreen(
                 resetDialog()
                 dialogOpen = true
             }
-        ) { index, exercise, dragHandle ->
+        ) { index, exercise, dragModifier, elevation ->
+
+            expandedStates[exercise.id] = remember { mutableStateOf(false) }
+
             ExerciseItem(
                 Modifier
                     .fillMaxWidth(),
@@ -156,8 +155,9 @@ fun ExercisesScreen(
                     currentExercise = exercise
 
                 },
-                dragHandle = dragHandle,
-                isExpanded = expandedStateList[index],
+                dragModifier = dragModifier,
+                elevation = elevation,
+                isExpanded = expandedStates[exercise.id]!!,
                 canExpand = canExpand,
                 onExpand = onAccordionExpand
             )

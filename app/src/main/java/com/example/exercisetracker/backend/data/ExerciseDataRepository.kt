@@ -53,6 +53,8 @@ class ExerciseDataRepository(
         }
     }
 
+
+    // TODO: failure, success
     suspend inline fun <reified itemType> readList(key: String): List<itemType> {
 
         return try {

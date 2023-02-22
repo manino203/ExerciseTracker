@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.Exercise
@@ -31,7 +32,8 @@ fun ExerciseItem(
     exercise: Exercise,
     onClick: (Exercise) -> Unit,
     onLongClick: (Exercise) -> Unit,
-    dragHandle: @Composable (() -> Unit)? = null,
+    dragModifier: Modifier? = null,
+    elevation: State<Dp>,
     isExpanded: MutableState<Boolean> = mutableStateOf(false),
     canExpand: MutableState<Boolean> = mutableStateOf(true),
     onExpand: (Exercise, MutableState<Boolean>, SnapshotStateList<ExerciseDetails>) -> Unit
@@ -50,15 +52,16 @@ fun ExerciseItem(
         isExpanded = isExpanded.value && canExpand.value,
         header = {
             Item(
-                modifier
+                modifier,
+                contentModifier =
+                Modifier
                     .combinedClickable(
                         onClick = { onClick(exercise) },
                         onLongClick = { onLongClick(exercise) }
                     ),
+                elevation = elevation,
                 contentPadding = 16.dp,
-                dragHandle = {
-                    dragHandle?.invoke()
-                }
+                dragModifier = dragModifier
             ) {
 
                 Column(

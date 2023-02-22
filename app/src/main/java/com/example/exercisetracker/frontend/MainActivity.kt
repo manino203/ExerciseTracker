@@ -8,10 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
@@ -45,13 +42,17 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         composable(Route.BodyParts.route) {
-
-                            BodyPartsScreen(bodyParts = viewModel.bodyParts, onItemClick = {
-                                viewModel.getExercises(it)
-                                navController.navigate(Route.Exercises.createRoute(it))
-                            },
+                            LaunchedEffect(Unit) {
+                                viewModel.getBodyParts()
+                            }
+                            BodyPartsScreen(
+                                bodyParts = viewModel.bodyParts,
+                                onItemClick = {
+                                    viewModel.getExercises(it)
+                                    navController.navigate(Route.Exercises.createRoute(it))
+                                },
                                 onSwap = { from: Int, to: Int ->
-                                    viewModel.onItemMove(viewModel.bodyParts, from, to)
+                                    viewModel.onBodyPartMove(from, to)
                                 },
                                 onDragEnd = {
 
@@ -101,8 +102,8 @@ class MainActivity : ComponentActivity() {
                                     viewModel.deleteExercise(it)
                                 },
                                 onSwap = { from: Int, to: Int ->
-                                    viewModel.onItemMove(
-                                        viewModel.exercises,
+                                    viewModel.onExerciseMove(
+                                        bodyPartPath,
                                         from,
                                         to
                                     )

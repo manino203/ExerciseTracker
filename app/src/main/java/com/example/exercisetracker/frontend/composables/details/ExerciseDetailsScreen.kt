@@ -169,12 +169,13 @@ fun ExerciseDetailsScreen(
                 dialogOpen = true
             }
         )
-        { index, details, _ ->
+        { index, details, _, elevation ->
             ExerciseDetailsItem(
                 Modifier
                     .fillMaxWidth(),
                 details,
                 index,
+                elevation,
                 onClick = {
                     dialogOpen = true
                     currentEditData.items[0].state.value = "${details.weight}"

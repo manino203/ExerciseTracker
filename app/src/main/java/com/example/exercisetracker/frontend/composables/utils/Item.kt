@@ -1,36 +1,47 @@
 package com.example.exercisetracker.frontend.composables.utils
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.exercisetracker.R
 
 @Composable
 fun Item(
     modifier: Modifier = Modifier,
+    contentModifier: Modifier = Modifier,
     roundCornerPercentage: Int = 5,
     contentPadding: Dp = 16.dp,
-    dragHandle: @Composable (() -> Unit)? = null,
+    dragModifier: Modifier? = null,
+    elevation: State<Dp>,
     content: @Composable () -> Unit
 ) {
     val shape = RoundedCornerShape(roundCornerPercentage)
 
     Card(
-        modifier
-            ,
+        modifier,
+//            .border(1.dp, Color.Blue),
+        backgroundColor = MaterialTheme.colorScheme.surface,
         shape = shape,
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 10.dp
-        ),
-        border = CardDefaults.outlinedCardBorder(
-            true
-        )
+        elevation = elevation.value,
+        border = BorderStroke(1.dp, Color(255, 30, 90))
 
     ) {
         Column(
@@ -38,24 +49,35 @@ fun Item(
 
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-        ){
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(contentPadding),
-                horizontalArrangement = Arrangement.Center
-            ){ content() }
-            Row(
-                Modifier
-                    .fillMaxWidth()
+        ) {
+            Row(contentModifier) {
+                Row(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(contentPadding),
+                    horizontalArrangement = Arrangement.Center
+                ) { content() }
+            }
 
-            ){ Divider(color = MaterialTheme.colorScheme.onSurface) }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background),
-                horizontalArrangement = Arrangement.Center
-            ){ dragHandle?.invoke() }
+            Divider(
+                color = Color(255, 0, 60)
+            )
+
+            dragModifier?.let {
+                return@let Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black)
+                        .then(dragModifier),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painterResource(id = R.drawable.drag_handle),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+                        contentDescription = "",
+                    )
+                }
+            }
         }
 
     }
@@ -65,7 +87,8 @@ fun Item(
 @Composable
 fun ItemPreview() {
     Item(
-        Modifier.fillMaxSize()
+        Modifier.fillMaxSize(),
+        elevation = remember { mutableStateOf(10.dp) }
     ) {
         Text("wat")
 //        Column(Modifier.fillMaxSize()){

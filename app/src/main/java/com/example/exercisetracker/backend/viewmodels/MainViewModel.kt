@@ -22,9 +22,9 @@ class MainViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
     @ApplicationContext context: Context
 ) : ViewModel() {
-
-
-    val bodyParts = mutableStateListOf(
+    //TODO: osetrit aby sa nemohlo nic takto volat
+    val BODY_PARTS_PATH = "7466e74f83c475325ee39d4a5aefda0d3878bcca04dedc9fbd81d13429e9c2c2"
+    val DEFAULT_BODY_PARTS = mutableStateListOf(
         BodyPart("Biceps", context.getString(R.string.biceps)),
         BodyPart("Triceps", context.getString(R.string.triceps)),
         BodyPart("Shoulders", context.getString(R.string.shoulders)),
@@ -34,17 +34,11 @@ class MainViewModel @Inject constructor(
         BodyPart("Legs", context.getString(R.string.legs)),
     )
 
-    // wip
-    fun getBodyParts(bodyPart: String) {
-        viewModelScope.launch(ioDispatcher) {
-            exercisesLoading.value = true
-            exercises = repo.readList<Exercise>(bodyPart).toMutableStateList()
-            exercisesLoading.value = false
-        }
-    }
+    val bodyParts = mutableStateListOf<BodyPart>()
 
     var details: SnapshotStateList<ExerciseDetails> = mutableStateListOf()
     var exercises: SnapshotStateList<Exercise> = mutableStateListOf()
+    var bodyPartsLoading = mutableStateOf(true)
     var detailsLoading = mutableStateOf(true)
     var exercisesLoading = mutableStateOf(true)
 
@@ -54,6 +48,44 @@ class MainViewModel @Inject constructor(
                 add(toIndex, removeAt(fromIndex))
             }
         }
+    }
+
+    fun getBodyParts() {
+        viewModelScope.launch(ioDispatcher) {
+            bodyPartsLoading.value = true
+            bodyParts.clear()
+            bodyParts.addAll(repo.readList<BodyPart>(BODY_PARTS_PATH).toMutableStateList())
+            if (bodyParts.isEmpty()) {
+                bodyParts.addAll(DEFAULT_BODY_PARTS)
+                saveBodyParts()
+            }
+            bodyPartsLoading.value = false
+        }
+    }
+
+    private fun saveBodyParts() {
+        viewModelScope.launch(ioDispatcher) {
+            bodyPartsLoading.value = true
+            repo.saveList(BODY_PARTS_PATH, bodyParts)
+            bodyPartsLoading.value = false
+        }
+    }
+
+    fun onBodyPartMove(
+        fromIndex: Int,
+        toIndex: Int
+    ) {
+        onItemMove(bodyParts, fromIndex, toIndex)
+        saveBodyParts()
+    }
+
+    fun onExerciseMove(
+        path: String,
+        fromIndex: Int,
+        toIndex: Int
+    ) {
+        onItemMove(exercises, fromIndex, toIndex)
+        saveExercises(path)
     }
 
     fun saveExercises(path: String) {
@@ -68,11 +100,12 @@ class MainViewModel @Inject constructor(
     fun getExercises(bodyPart: String) {
         viewModelScope.launch(ioDispatcher) {
             exercisesLoading.value = true
-            exercises = repo.readList<Exercise>(bodyPart).toMutableStateList()
+            exercises.clear()
+            exercises.addAll(repo.readList<Exercise>(bodyPart).toMutableStateList())
             exercisesLoading.value = false
         }
     }
-
+    
     fun addExercise(exercise: Exercise) {
         if (exercise.name !in exercises.map { it.name }) {
             exercises.add(0, exercise)

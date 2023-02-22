@@ -7,15 +7,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.ExerciseDetails
-import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
+import com.example.exercisetracker.frontend.composables.utils.Item
 import java.text.SimpleDateFormat
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -24,20 +25,21 @@ fun ExerciseDetailsItem(
     modifier: Modifier = Modifier,
     details: ExerciseDetails,
     index: Int,
+    elevation: State<Dp>,
     onClick: (Int) -> Unit
 ) {
 
 
-    RoundWithBorders(
-        modifier
+    Item(
+        modifier,
+        contentModifier = Modifier
             .combinedClickable(
                 onClick = {
                     onClick(index)
                 }
 
             ),
-        roundCornerPercentage = 40,
-        contentPadding = PaddingValues(16.dp)
+        elevation = elevation
     ) {
         Row(
             Modifier

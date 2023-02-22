@@ -5,8 +5,11 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.frontend.composables.utils.Item
 
@@ -15,27 +18,28 @@ import com.example.exercisetracker.frontend.composables.utils.Item
 fun BodyPartItem(
     modifier: Modifier = Modifier,
     label: String,
-    dragHandle: @Composable (() -> Unit)? = null,
+    dragModifier: Modifier? = null,
+    elevation: State<Dp>,
     onClick: () -> Unit
 ) {
     Item(
-        modifier
+        modifier,
+        contentModifier = Modifier
+            .fillMaxSize()
             .combinedClickable(
                 onClick = onClick
             ),
         contentPadding = 28.dp,
-        dragHandle = {
-            dragHandle?.invoke()
-        }
+        dragModifier = dragModifier,
+        elevation = elevation
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Column {
                 Text(
                     text = label,
+                    color = Color(255, 0, 60)
                 )
 
 
