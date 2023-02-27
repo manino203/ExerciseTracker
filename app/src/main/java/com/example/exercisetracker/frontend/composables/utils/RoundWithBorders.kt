@@ -25,9 +25,9 @@ fun RoundWithBorders(
 ) {
     val shape = RoundedCornerShape(roundCornerPercentage)
     Box(
-        Modifier
+        modifier
             .clip(shape)
-            .then(modifier)
+//            .then(modifier)
             .border(borderWidth, borderColor, shape = shape),
 
         contentAlignment = Alignment.Center

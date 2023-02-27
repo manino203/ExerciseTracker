@@ -52,7 +52,8 @@ fun ExerciseItem(
         isExpanded = isExpanded.value && canExpand.value,
         header = {
             Item(
-                modifier,
+                modifier
+                    .then(it),
                 contentModifier =
                 Modifier
                     .combinedClickable(

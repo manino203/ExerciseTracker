@@ -180,7 +180,7 @@ fun LineGraph(
             /**
              * Drawing Grid lines inclined towards x axis
              */
-            if (style.visibility.isGridVisible) {
+            if (style.visibility.isGridVisible.first) {
                 for (i in 0 until maxPointsSize) {
 
                     // lines inclined towards x axis
@@ -196,7 +196,8 @@ fun LineGraph(
                         ),
                     )
                 }
-
+            }
+            if (style.visibility.isGridVisible.second) {
                 for (i in 0 until yAxisLabelList.size) {
                     // lines inclined towards y axis
                     drawLine(

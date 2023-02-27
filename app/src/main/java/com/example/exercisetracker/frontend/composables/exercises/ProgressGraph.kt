@@ -38,7 +38,7 @@ fun ProgressGraph(
         details.map {
             val date = DateFormatter.toDate(it.timestamp)
             GraphData.String(
-                "${date.subSequence(0, 5)}\n ${
+                "${date.subSequence(0, 6)}\n ${
                     date.subSequence(
                         6,
                         date.length

@@ -16,15 +16,20 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("PrivatePropertyName")
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repo: ExerciseDataRepository,
     private val ioDispatcher: CoroutineDispatcher,
     @ApplicationContext context: Context
 ) : ViewModel() {
-    //TODO: osetrit aby sa nemohlo nic takto volat
-    val BODY_PARTS_PATH = "7466e74f83c475325ee39d4a5aefda0d3878bcca04dedc9fbd81d13429e9c2c2"
-    val DEFAULT_BODY_PARTS = mutableStateListOf(
+
+    companion object {
+        private const val BODY_PARTS_PATH =
+            "7466e74f83c475325ee39d4a5aefda0d3878bcca04dedc9fbd81d13429e9c2c2"
+    }
+
+    private val DEFAULT_BODY_PARTS = mutableStateListOf(
         BodyPart("Biceps", context.getString(R.string.biceps)),
         BodyPart("Triceps", context.getString(R.string.triceps)),
         BodyPart("Shoulders", context.getString(R.string.shoulders)),
@@ -63,9 +68,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun saveBodyParts() {
+    private fun saveBodyParts(loading: Boolean = true) {
         viewModelScope.launch(ioDispatcher) {
-            bodyPartsLoading.value = true
+            bodyPartsLoading.value = loading
             repo.saveList(BODY_PARTS_PATH, bodyParts)
             bodyPartsLoading.value = false
         }
@@ -76,7 +81,7 @@ class MainViewModel @Inject constructor(
         toIndex: Int
     ) {
         onItemMove(bodyParts, fromIndex, toIndex)
-        saveBodyParts()
+        saveBodyParts(false)
     }
 
     fun onExerciseMove(
@@ -85,13 +90,13 @@ class MainViewModel @Inject constructor(
         toIndex: Int
     ) {
         onItemMove(exercises, fromIndex, toIndex)
-        saveExercises(path)
+        saveExercises(path, false)
     }
 
-    fun saveExercises(path: String) {
+    fun saveExercises(path: String, loading: Boolean = true) {
 
         viewModelScope.launch(ioDispatcher) {
-            exercisesLoading.value = true
+            exercisesLoading.value = loading
             repo.saveList(path, exercises.toList())
             exercisesLoading.value = false
         }
@@ -105,7 +110,7 @@ class MainViewModel @Inject constructor(
             exercisesLoading.value = false
         }
     }
-    
+
     fun addExercise(exercise: Exercise) {
         if (exercise.name !in exercises.map { it.name }) {
             exercises.add(0, exercise)

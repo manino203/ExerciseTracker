@@ -25,7 +25,7 @@ data class LinearGraphVisibility(
     val isCrossHairVisible: Boolean = false,
     val isYAxisLabelVisible: Boolean = false,
     val isXAxisLabelVisible: Boolean = true,
-    val isGridVisible: Boolean = false,
+    val isGridVisible: Pair<Boolean, Boolean> = Pair(false, false),
 
     val isHeaderVisible: Boolean = false,
 )

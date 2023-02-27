@@ -27,18 +27,18 @@ import com.example.exercisetracker.R
 fun Item(
     modifier: Modifier = Modifier,
     contentModifier: Modifier = Modifier,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
     roundCornerPercentage: Int = 5,
     contentPadding: Dp = 16.dp,
     dragModifier: Modifier? = null,
-    elevation: State<Dp>,
+    elevation: State<Dp> = mutableStateOf(0.dp),
     content: @Composable () -> Unit
 ) {
     val shape = RoundedCornerShape(roundCornerPercentage)
 
     Card(
         modifier,
-//            .border(1.dp, Color.Blue),
-        backgroundColor = MaterialTheme.colorScheme.surface,
+        backgroundColor = backgroundColor,
         shape = shape,
         elevation = elevation.value,
         border = BorderStroke(1.dp, Color(255, 30, 90))
@@ -59,9 +59,11 @@ fun Item(
                 ) { content() }
             }
 
-            Divider(
-                color = Color(255, 0, 60)
-            )
+            dragModifier?.let {
+                return@let Divider(
+                    color = Color(255, 0, 60)
+                )
+            }
 
             dragModifier?.let {
                 return@let Row(
