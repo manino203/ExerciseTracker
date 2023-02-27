@@ -1,13 +1,17 @@
 package com.example.exercisetracker.frontend.composables.details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.zIndex
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.DataClassFactory
 import com.example.exercisetracker.backend.data.ExerciseDetails
@@ -55,7 +59,7 @@ fun ExerciseDetailsScreen(
                 DialogFormData(
                     TextFieldFormat.Int,
                     seriesString,
-                    mutableStateOf("")
+                    mutableStateOf("5")
                 ),
                 DialogFormData(
                     TextFieldFormat.Date,
@@ -156,18 +160,39 @@ fun ExerciseDetailsScreen(
         Modifier.fillMaxSize()
     ) {
 
-        LinearProgressIndicator(
+        Box(
             Modifier
-                .fillMaxWidth(),
-            color = if (loading.value) ProgressIndicatorDefaults.linearColor else Color.Transparent,
-            trackColor = if (loading.value) ProgressIndicatorDefaults.linearTrackColor else Color.Transparent
-        )
+                .shadow(20.dp)
+                .zIndex(1f)
+        ) {
+            LinearProgressIndicator(
+                Modifier
+                    .fillMaxWidth()
+                    .zIndex(1f),
+                color = if (loading.value) ProgressIndicatorDefaults.linearColor else Color.Transparent,
+                trackColor = if (loading.value) ProgressIndicatorDefaults.linearTrackColor else Color.Transparent
+            )
+
+
+
+            AddButton(
+                Modifier
+                    .zIndex(0.5f)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface),
+                onClick = {
+                    dialogOpen = true
+                }
+            )
+        }
+
+
+
+
 
         ReorderableLazyColumn(
+            Modifier.zIndex(0.5f),
             data = detailsList,
-            onAddClick = {
-                dialogOpen = true
-            }
         )
         { index, details, _, elevation ->
             ExerciseDetailsItem(

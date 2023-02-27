@@ -17,10 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -98,6 +95,14 @@ fun DialogForm(
                     } else {
                         Modifier
                     }
+                        .onFocusChanged { focusState ->
+                            if (focusState.isFocused) {
+                                val text = textValue.text
+                                textValue = textValue.copy(
+                                    selection = TextRange(0, text.length)
+                                )
+                            }
+                        }
                         .weight(0.8f),
                     shape = RoundedCornerShape(50),
                     label = {

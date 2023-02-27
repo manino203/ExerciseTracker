@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
@@ -23,7 +22,6 @@ import com.example.exercisetracker.frontend.composables.utils.reorderable.reorde
 fun <T> ReorderableLazyColumn(
     modifier: Modifier = Modifier,
     data: List<T>,
-    onAddClick: (() -> Unit)? = null,
     onSwap: ((Int, Int) -> Unit)? = null,
     onDragEnd: ((startIndex: Int, endIndex: Int) -> (Unit))? = null,
     onDragStart: (() -> (Unit))? = null,
@@ -36,7 +34,7 @@ fun <T> ReorderableLazyColumn(
 ) {
     val state = rememberReorderableLazyListState(
         onMove = { from, to ->
-            onSwap?.invoke(from.index, to.index)
+            onSwap?.invoke(from.index - 1, to.index - 1)
         },
         onDragEnd = onDragEnd
     )
@@ -46,17 +44,10 @@ fun <T> ReorderableLazyColumn(
         Modifier
             .fillMaxSize()
 
-            .padding(PaddingValues(16.dp, 8.dp, 16.dp, 0.dp)),
+            .padding(16.dp, 0.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        if (onAddClick != null) {
-            AddButton(
-                Modifier
-                    .fillMaxWidth(),
-                onClick = onAddClick
-            )
 
-        }
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -69,31 +60,44 @@ fun <T> ReorderableLazyColumn(
 //            contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            itemsIndexed(items = data) { index, item ->
-                ReorderableItem(
-                    state,
-                    item,
-                    Modifier.background(Color.Transparent),
-                    index = index
-                ) { isDragging ->
-                    val elevation = animateDpAsState(if (isDragging) 10.dp else 0.dp)
-                    Column(
-                        modifier = Modifier
-//                            .shadow(elevation)
-                            .background(Color.Transparent)
+            items(data.size + 1, { index -> index }) { index ->
+                if (index == 0) {
+                    ReorderableItem(
+                        state,
+                        "spacer",
+                        index = index
                     ) {
-                        itemContent(
-                            index,
-                            item,
-                            Modifier.detectReorderAfterLongPress(state) {
-                                haptic.performHapticFeedback(
-                                    HapticFeedbackType.LongPress
-                                )
-                                onDragStart?.invoke()
-                            },
-                            elevation
-
+                        Spacer(
+                            Modifier
+                                .height(8.dp)
                         )
+                    }
+                } else {
+                    ReorderableItem(
+                        state,
+                        data[index - 1],
+                        Modifier.background(Color.Transparent),
+                        index = index
+                    ) { isDragging ->
+                        val elevation = animateDpAsState(if (isDragging) 10.dp else 0.dp)
+                        Column(
+                            modifier = Modifier
+//                            .shadow(elevation)
+                                .background(Color.Transparent)
+                        ) {
+                            itemContent(
+                                index - 1,
+                                data[index - 1],
+                                Modifier.detectReorderAfterLongPress(state) {
+                                    haptic.performHapticFeedback(
+                                        HapticFeedbackType.LongPress
+                                    )
+                                    onDragStart?.invoke()
+                                },
+                                elevation
+
+                            )
+                        }
                     }
                 }
 

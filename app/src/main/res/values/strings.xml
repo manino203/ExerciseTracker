@@ -14,7 +14,7 @@
     <string name="name">Name</string>
     <string name="weight">Weight</string>
     <string name="reps">Reps</string>
-    <string name="series">Series</string>
+    <string name="series">Sets</string>
     <string name="date">Date</string>
 
     <string name="calendar">Calendar</string>

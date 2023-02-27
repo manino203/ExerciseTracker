@@ -9,6 +9,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 
@@ -46,11 +47,11 @@ private val LightColorScheme = lightColorScheme(
 
 
 private val DarkColorScheme = darkColorScheme(
-//    primary = md_theme_dark_primary,
+    primary = Color(255, 30, 90),
 //    onPrimary = md_theme_dark_onPrimary,
 //    primaryContainer = md_theme_dark_primaryContainer,
 //    onPrimaryContainer = md_theme_dark_onPrimaryContainer,
-//    secondary = md_theme_dark_secondary,
+    secondary = Color(255, 0, 60),
 //    onSecondary = md_theme_dark_onSecondary,
 //    secondaryContainer = md_theme_dark_secondaryContainer,
 //    onSecondaryContainer = md_theme_dark_onSecondaryContainer,

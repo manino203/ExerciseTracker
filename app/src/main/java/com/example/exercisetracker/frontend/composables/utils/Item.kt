@@ -41,7 +41,7 @@ fun Item(
         backgroundColor = backgroundColor,
         shape = shape,
         elevation = elevation.value,
-        border = BorderStroke(1.dp, Color(255, 30, 90))
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
 
     ) {
         Column(
@@ -61,7 +61,7 @@ fun Item(
 
             dragModifier?.let {
                 return@let Divider(
-                    color = Color(255, 0, 60)
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
 

@@ -82,12 +82,12 @@ fun ProgressGraph(
                     backgroundColor = MaterialTheme.colorScheme.background,
                     fillGradient = Brush.verticalGradient(
                         listOf(
-                            Color(255, 0, 60).setAlpha(0.5f),
+                            MaterialTheme.colorScheme.secondary.setAlpha(0.5f),
                             Color.Transparent
                         )
                     ),
-                    lineColor = Color(255, 0, 60),
-                    pointColor = Color(255, 0, 60),
+                    lineColor = MaterialTheme.colorScheme.secondary,
+                    pointColor = MaterialTheme.colorScheme.secondary,
                     crossHairColor = Color.Gray,
                     clickHighlightColor = Color.Gray.setAlpha(0.5f)
                 )

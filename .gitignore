@@ -14,3 +14,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+/github_token.txt

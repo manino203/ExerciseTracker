@@ -47,10 +47,13 @@ class MainViewModel @Inject constructor(
     var detailsLoading = mutableStateOf(true)
     var exercisesLoading = mutableStateOf(true)
 
-    fun <T> onItemMove(items: SnapshotStateList<T>, fromIndex: Int, toIndex: Int) {
-        if (fromIndex != toIndex) {
+    private fun <T> onItemMove(items: SnapshotStateList<T>, fromIndex: Int, toIndex: Int) {
+
+        if (fromIndex != toIndex && fromIndex in 0 until items.size && toIndex in 0 until items.size) {
             items.apply {
                 add(toIndex, removeAt(fromIndex))
+
+
             }
         }
     }
