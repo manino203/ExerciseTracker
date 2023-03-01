@@ -107,7 +107,7 @@ fun ProgressGraph(
                         .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    
+
                     Text(
                         text = if (currentItemIndex != null) {
                             "${
