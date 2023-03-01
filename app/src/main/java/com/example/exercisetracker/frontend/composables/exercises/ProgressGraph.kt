@@ -1,9 +1,8 @@
 package com.example.exercisetracker.frontend.composables.exercises
 
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -12,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter
@@ -101,26 +101,46 @@ fun ProgressGraph(
         ) {
 
             Column {
-
-                Text(
-                    text = "${stringResource(id = R.string.reps)}: ${
-                        if (currentItemIndex != null) {
-                            details[currentItemIndex!!].reps.toString()
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    
+                    Text(
+                        text = if (currentItemIndex != null) {
+                            "${
+                                stringResource(id = R.string.reps)
+                            }: ${
+                                details[currentItemIndex!!].reps
+                            }"
                         } else {
                             ""
                         }
-                    }"
-                )
+                    )
 
-                Text(
-                    text = "${stringResource(id = R.string.series)}: ${
-                        if (currentItemIndex != null) {
-                            details[currentItemIndex!!].series.toString()
+                    Text(
+                        text = if (currentItemIndex != null) {
+                            "${
+                                stringResource(id = R.string.series)
+                            }: ${
+                                details[currentItemIndex!!].series
+                            } "
                         } else {
                             ""
                         }
-                    }"
+
+                    )
+                }
+                Divider(
+                    Modifier
+                        .padding(
+                            start = 2.dp,
+                            end = 2.dp
+                        )
                 )
+
             }
 
 

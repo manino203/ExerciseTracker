@@ -25,9 +25,11 @@ fun Accordion(
         header(
             Modifier
                 .zIndex(1f)
-                .shadow(15.dp)
+                .shadow(if (isExpanded) 5.dp else 0.dp)
         )
-        AnimatedVisibility(visible = isExpanded) {
+        AnimatedVisibility(
+            visible = isExpanded
+        ) {
             Item(
                 Modifier
                     .zIndex(0.5f)
