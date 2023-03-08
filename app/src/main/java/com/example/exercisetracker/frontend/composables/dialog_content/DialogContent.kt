@@ -21,7 +21,7 @@ fun DialogContent(
     modifier: Modifier = Modifier,
     values: DialogFormDataList,
     onCalendarClick: () -> Unit,
-    onSaveClick: (DialogFormDataList) -> Unit,
+    onSaveClick: () -> Unit,
     onDeleteClick: (() -> Unit)? = null,
     onCancelClick: () -> Unit
 ) {
@@ -46,10 +46,12 @@ fun DialogContent(
             DialogButtons(
                 onDeleteClick = onDeleteClick,
                 onSaveClick = {
-                    onSaveClick(values)
+                    onSaveClick()
                 },
                 onCancelClick = onCancelClick,
-                values = values
+                saveEnabled = values.items.all {
+                    it.state.value.isNotEmpty()
+                }
             )
 
 

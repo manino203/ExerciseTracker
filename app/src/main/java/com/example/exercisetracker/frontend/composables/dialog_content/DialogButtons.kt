@@ -11,15 +11,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
 import com.example.exercisetracker.frontend.composables.utils.RoundWithBorders
-import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogFormDataList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DialogButtons(
     onDeleteClick: (() -> Unit)?,
-    onSaveClick: (DialogFormDataList) -> Unit,
+    onSaveClick: () -> Unit,
     onCancelClick: () -> Unit,
-    values: DialogFormDataList
+    saveEnabled: Boolean = false
 ) {
 
     Column(
@@ -68,11 +67,9 @@ fun DialogButtons(
                 Modifier
                     .weight(0.5f, true)
                     .combinedClickable(
-                        enabled = values.items.all {
-                            it.state.value.isNotEmpty()
-                        },
+                        enabled = saveEnabled,
                         onClick = {
-                            onSaveClick(values)
+                            onSaveClick.invoke()
                         }
                     ), roundCornerPercentage = 50
             ) {

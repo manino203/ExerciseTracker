@@ -65,7 +65,6 @@ fun ExerciseDetailsScreen(
                     TextFieldFormat.Date,
                     dateString,
                     mutableStateOf(
-
                         DateFormatter.toDate(
                             Instant.now().toEpochMilli()
                         )
@@ -104,25 +103,25 @@ fun ExerciseDetailsScreen(
                     calendarOpen = true
                 },
                 onCancelClick = resetDialog,
-                onSaveClick = if (currentDetails == null) { it ->
-                    addItem(
-                        DataClassFactory.createExerciseDetails(
-                            it,
-                            calendarState.selectedDateMillis ?: 0
-                        )
-                    )
-                    resetDialog()
-                } else { data ->
-                    currentDetails?.let {
-                        editItem(
+                onSaveClick = {
+                    if (currentDetails == null) {
+                        addItem(
                             DataClassFactory.createExerciseDetails(
-                                data,
-                                calendarState.selectedDateMillis ?: 0
-                            ),
-                            it.second
+                                currentEditData
+                            )
                         )
+                        resetDialog()
+                    } else {
+                        currentDetails?.let {
+                            editItem(
+                                DataClassFactory.createExerciseDetails(
+                                    currentEditData
+                                ),
+                                it.second
+                            )
+                        }
+                        resetDialog()
                     }
-                    resetDialog()
                 },
                 onDeleteClick = if (currentDetails == null) {
                     null
@@ -208,6 +207,7 @@ fun ExerciseDetailsScreen(
                     currentEditData.items[2].state.value = "${details.series}"
                     currentEditData.items[3].state.value =
                         DateFormatter.toDate(details.timestamp)
+
                     currentDetails = Pair(details, index)
                 }
             )

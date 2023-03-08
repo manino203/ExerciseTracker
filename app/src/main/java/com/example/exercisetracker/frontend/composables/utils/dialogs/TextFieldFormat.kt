@@ -52,6 +52,7 @@ sealed class TextFieldFormat {
         }
     }
 
+
     object Date : TextFieldFormat() {
         override fun correspondsWithFormat(s: String): Boolean {
             return if (!s.contains("\n") && s.isEmpty()) {

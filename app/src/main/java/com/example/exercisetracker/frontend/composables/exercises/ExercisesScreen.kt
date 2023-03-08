@@ -94,17 +94,19 @@ fun ExercisesScreen(
 
                 },
                 onCancelClick = resetDialog,
-                onSaveClick = if (currentExercise == null) { it ->
-                    addItem(
-                        DataClassFactory.createExercise(
-                            it,
-                            bodyPartPath
+                onSaveClick = {
+                    if (currentExercise == null) {
+                        addItem(
+                            DataClassFactory.createExercise(
+                                currentEditData,
+                                bodyPartPath
+                            )
                         )
-                    )
-                    resetDialog()
-                } else { data: DialogFormDataList ->
-                    onEdit(data.items[0].state.value, currentExercise!!)
-                    resetDialog()
+                        resetDialog()
+                    } else {
+                        onEdit(currentEditData.items[0].state.value, currentExercise!!)
+                        resetDialog()
+                    }
                 },
                 onDeleteClick = if (currentExercise == null) {
                     null
@@ -165,7 +167,7 @@ fun ExercisesScreen(
                 canExpand.value = true
                 onDragEnd()
             }
-        ) { index, exercise, dragModifier, elevation ->
+        ) { _, exercise, dragModifier, elevation ->
 
             expandedStates[exercise.id] = remember { mutableStateOf(false) }
 
