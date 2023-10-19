@@ -48,12 +48,9 @@ class MainViewModel @Inject constructor(
     var exercisesLoading = mutableStateOf(true)
 
     private fun <T> onItemMove(items: SnapshotStateList<T>, fromIndex: Int, toIndex: Int) {
-
         if (fromIndex != toIndex && fromIndex in 0 until items.size && toIndex in 0 until items.size) {
             items.apply {
                 add(toIndex, removeAt(fromIndex))
-
-
             }
         }
     }

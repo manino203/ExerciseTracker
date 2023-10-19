@@ -24,14 +24,18 @@ import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.Exercise
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.Item
+import com.example.exercisetracker.frontend.composables.utils.dialogs.ExerciseDialogForm
+import com.example.exercisetracker.frontend.composables.utils.dialogs.FormDialog
+import com.example.exercisetracker.frontend.composables.utils.dialogs.rememberFormState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExerciseItem(
     modifier: Modifier = Modifier,
     exercise: Exercise,
+    onDelete: (Exercise) -> Unit,
+    editItem: (String, Exercise) -> Unit,
     onClick: (Exercise) -> Unit,
-    onLongClick: (Exercise) -> Unit,
     dragModifier: Modifier? = null,
     elevation: State<Dp>,
     isExpanded: MutableState<Boolean> = mutableStateOf(false),
@@ -48,6 +52,28 @@ fun ExerciseItem(
         mutableStateListOf<ExerciseDetails>()
     }
 
+    var dialogOpen by remember {
+        mutableStateOf(false)
+    }
+
+    val formState = rememberFormState(form = ExerciseDialogForm(exercise))
+
+    if (dialogOpen) {
+        FormDialog(
+            formState = formState,
+            onDelete = {
+                onDelete(exercise)
+                dialogOpen = false
+            },
+            onDismiss = {
+                dialogOpen = false
+            },
+            onConfirm = {
+                editItem(formState.values.first().value, exercise)
+            }
+        )
+    }
+
     Accordion(
         isExpanded = isExpanded.value && canExpand.value,
         header = {
@@ -58,7 +84,9 @@ fun ExerciseItem(
                 Modifier
                     .combinedClickable(
                         onClick = { onClick(exercise) },
-                        onLongClick = { onLongClick(exercise) }
+                        onLongClick = {
+                            dialogOpen = true
+                        }
                     ),
                 elevation = elevation,
                 contentPadding = 16.dp,

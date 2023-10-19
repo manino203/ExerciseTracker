@@ -1,4 +1,4 @@
-package com.example.exercisetracker.frontend.composables.dialog_content
+package com.example.exercisetracker.frontend.composables.utils.dialogs.dialog_content
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogFormDataList
+import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogForm
 
 
 @OptIn(
@@ -19,14 +20,13 @@ import com.example.exercisetracker.frontend.composables.utils.dialogs.DialogForm
 @Composable
 fun DialogContent(
     modifier: Modifier = Modifier,
-    values: DialogFormDataList,
+    values: List<MutableState<String>>,
+    form: DialogForm,
     onCalendarClick: () -> Unit,
     onSaveClick: () -> Unit,
     onDeleteClick: (() -> Unit)? = null,
     onCancelClick: () -> Unit
 ) {
-
-
     Surface(
         modifier
             .fillMaxWidth()
@@ -36,8 +36,9 @@ fun DialogContent(
     ) {
 
         Column {
-            DialogForm(
+            DialogFormComposable(
                 values = values,
+                form = form,
                 localFocusManager = LocalFocusManager.current,
                 keyboardController = LocalSoftwareKeyboardController.current,
                 onCalendarClick = onCalendarClick
@@ -49,16 +50,10 @@ fun DialogContent(
                     onSaveClick()
                 },
                 onCancelClick = onCancelClick,
-                saveEnabled = values.items.all {
-                    it.state.value.isNotEmpty()
+                saveEnabled = values.all {
+                    it.value.isNotEmpty()
                 }
             )
-
-
         }
-
-
     }
-
-
 }

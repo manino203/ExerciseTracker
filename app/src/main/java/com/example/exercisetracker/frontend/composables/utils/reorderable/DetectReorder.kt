@@ -21,19 +21,6 @@ import androidx.compose.foundation.gestures.awaitLongPressOrCancellation
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 
-//fun Modifier.detectReorder(state: ReorderableState<*>) =
-//    this.then(
-//        Modifier.pointerInput(Unit) {
-//            detectVerticalDragGestures { change, dragAmount ->
-//
-//
-//                state.interactions.trySend(StartDrag(PointerId(0L), Offset(dragAmount, 0f)))
-//
-//
-//            }
-//        }
-//    )
-
 fun Modifier.detectReorderAfterLongPress(state: ReorderableState<*>, onLongPress: () -> Unit) =
     this.then(
         Modifier.pointerInput(Unit) {

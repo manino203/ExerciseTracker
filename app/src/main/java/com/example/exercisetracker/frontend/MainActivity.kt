@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                             }
 
                             ExercisesScreen(
-                                loading = viewModel.exercisesLoading,
+                                loading = viewModel.exercisesLoading.value,
                                 exercises = viewModel.exercises,
                                 bodyPartPath = bodyPartPath,
                                 onEdit = { newName, exercise ->
@@ -133,18 +133,17 @@ class MainActivity : ComponentActivity() {
                                 mutableStateOf(Path(bodyPart, exercise))
                             }
                             ExerciseDetailsScreen(
-                                loading = viewModel.detailsLoading,
+                                loading = viewModel.detailsLoading.value,
                                 detailsList = viewModel.details,
                                 addItem = {
                                     viewModel.addDetail(path, it)
                                 },
                                 editItem = { detail, index ->
                                     viewModel.editDetail(detail, index, path)
-                                },
-                                deleteItem = {
-                                    viewModel.deleteDetail(it, path)
                                 }
-                            )
+                            ) {
+                                viewModel.deleteDetail(it, path)
+                            }
                         }
                     }
                 }

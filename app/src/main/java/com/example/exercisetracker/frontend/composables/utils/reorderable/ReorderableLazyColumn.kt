@@ -57,7 +57,6 @@ fun <T> ReorderableLazyColumn(
                     } ?: Modifier
                 ),
             state = state.listState,
-//            contentPadding = PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(data.size + 1, { index -> index }) { index ->
@@ -79,10 +78,12 @@ fun <T> ReorderableLazyColumn(
                         Modifier.background(Color.Transparent),
                         index = index
                     ) { isDragging ->
-                        val elevation = animateDpAsState(if (isDragging) 10.dp else 0.dp)
+                        val elevation = animateDpAsState(
+                            if (isDragging) 10.dp else 0.dp,
+                            label = ""
+                        )
                         Column(
                             modifier = Modifier
-//                            .shadow(elevation)
                                 .background(Color.Transparent)
                         ) {
                             itemContent(
@@ -95,13 +96,10 @@ fun <T> ReorderableLazyColumn(
                                     onDragStart?.invoke()
                                 },
                                 elevation
-
                             )
                         }
                     }
                 }
-
-
             }
         }
     }

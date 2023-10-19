@@ -1,4 +1,4 @@
-package com.example.exercisetracker.frontend.composables.dialog_content
+package com.example.exercisetracker.frontend.composables.utils.dialogs.dialog_content
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable

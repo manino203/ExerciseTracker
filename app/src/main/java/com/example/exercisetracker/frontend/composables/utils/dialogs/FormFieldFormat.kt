@@ -2,12 +2,12 @@ package com.example.exercisetracker.frontend.composables.utils.dialogs
 
 import androidx.compose.ui.text.input.KeyboardType
 
-sealed class TextFieldFormat {
+sealed class FormFieldFormat {
 
     open fun correspondsWithFormat(s: String): Boolean = true
     open val keyboardType = KeyboardType.Text
 
-    object Float : TextFieldFormat() {
+    object Float : FormFieldFormat() {
 
         override val keyboardType: KeyboardType = KeyboardType.Number
         override fun correspondsWithFormat(s: String): Boolean {
@@ -31,7 +31,7 @@ sealed class TextFieldFormat {
     }
 
 
-    object Int : TextFieldFormat() {
+    object Int : FormFieldFormat() {
 
         override val keyboardType: KeyboardType = KeyboardType.Number
         override fun correspondsWithFormat(s: String): Boolean {
@@ -53,7 +53,7 @@ sealed class TextFieldFormat {
     }
 
 
-    object Date : TextFieldFormat() {
+    object Date : FormFieldFormat() {
         override fun correspondsWithFormat(s: String): Boolean {
             return if (!s.contains("\n") && s.isEmpty()) {
                 true
@@ -70,7 +70,7 @@ sealed class TextFieldFormat {
     }
 
 
-    object Str : TextFieldFormat() {
+    object Str : FormFieldFormat() {
         override fun correspondsWithFormat(s: String): Boolean {
             return !s.contains("\n")
         }
