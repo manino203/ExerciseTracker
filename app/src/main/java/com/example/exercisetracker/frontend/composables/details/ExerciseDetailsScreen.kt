@@ -1,29 +1,79 @@
 package com.example.exercisetracker.frontend.composables.details
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.DataClassFactory
 import com.example.exercisetracker.backend.data.ExerciseDetails
+import com.example.exercisetracker.backend.data.Path
+import com.example.exercisetracker.backend.viewmodels.MainViewModel
+import com.example.exercisetracker.backend.viewmodels.ToolbarViewModel
 import com.example.exercisetracker.frontend.composables.Screen
-import com.example.exercisetracker.frontend.composables.utils.*
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter.Companion.dateFormat
+import com.example.exercisetracker.frontend.composables.utils.ReorderableLazyColumn
 import com.example.exercisetracker.frontend.composables.utils.dialogs.CalendarDialog
 import com.example.exercisetracker.frontend.composables.utils.dialogs.DetailsDialogForm
 import com.example.exercisetracker.frontend.composables.utils.dialogs.FormDialog
 import com.example.exercisetracker.frontend.composables.utils.dialogs.rememberFormState
+import com.example.exercisetracker.frontend.composables.utils.routes.Route
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.util.*
+import java.util.Locale
 
+
+@Suppress("FunctionName")
+fun NavGraphBuilder.ExerciseDetailsScreen(
+    viewModel: MainViewModel,
+    toolbarViewModel: ToolbarViewModel,
+){
+    composable(
+        Route.ExerciseDetails.route,
+        Route.ExerciseDetails.args
+    ) {
+        val bodyPart by remember { mutableStateOf(it.arguments?.getString(Route.ExerciseDetails.args[0].name)!!) }
+        val exercise by remember { mutableStateOf(it.arguments?.getString(Route.ExerciseDetails.args[1].name)!!) }
+        val path by remember {
+            mutableStateOf(Path(bodyPart, exercise))
+        }
+        val appName = stringResource(id = R.string.app_name)
+        LaunchedEffect(Unit){
+            toolbarViewModel.onScreenChange(Route.ExerciseDetails, viewModel.getExerciseById(exercise)?.name ?: appName)
+        }
+
+        LaunchedEffect(viewModel.detailsLoading.value){
+            toolbarViewModel.updateLoading(viewModel.detailsLoading.value)
+        }
+
+        ExerciseDetailsScreen(
+            detailsList = viewModel.details,
+            addItem = {
+                viewModel.addDetail(path, it)
+            },
+            editItem = { detail, index ->
+                viewModel.editDetail(detail, index, path)
+            }
+        ) {
+            viewModel.deleteDetail(it, path)
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ExerciseDetailsScreen(
-    loading: Boolean,
+private fun ExerciseDetailsScreen(
     detailsList: SnapshotStateList<ExerciseDetails>,
     addItem: (ExerciseDetails) -> Unit,
     editItem: (ExerciseDetails, Int) -> Unit,
@@ -75,7 +125,6 @@ fun ExerciseDetailsScreen(
         )
     }
     Screen(
-        loading = loading,
         onAddClick = {
             dialogOpen = true
         },

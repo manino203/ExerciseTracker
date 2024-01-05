@@ -1,54 +1,42 @@
 package com.example.exercisetracker.frontend.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProgressIndicatorDefaults
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import com.example.exercisetracker.frontend.composables.utils.AddButton
 
 @Composable
 fun Screen(
-    loading: Boolean,
-    onAddClick: () -> Unit,
+    onAddClick: (() -> Unit)?,
     content: @Composable () -> Unit
 ) {
-    Column(
-        Modifier
-            .fillMaxSize()
-    ) {
-        Box(
-            Modifier
-                .shadow(20.dp)
-                .zIndex(1f)
-        ) {
-            LinearProgressIndicator(
-                Modifier
-                    .fillMaxWidth()
-                    .zIndex(1f),
-                color = if (loading) ProgressIndicatorDefaults.linearColor else Color.Transparent,
-                trackColor = if (loading) ProgressIndicatorDefaults.linearTrackColor else Color.Transparent
-            )
-
-            AddButton(
-                Modifier
-                    .zIndex(0.5f)
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface),
-                onClick = {
-                    onAddClick()
+    Scaffold(
+        floatingActionButton = {
+            onAddClick?.let{
+                FloatingActionButton(
+                    modifier = Modifier.size(100.dp, 50.dp),
+                    onClick = it,
+                    shape = RoundedCornerShape(100f)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Localized description")
                 }
-            )
+            }
         }
-        content()
+    ) { padding ->
+        Box(Modifier
+            .padding(padding)
+            .fillMaxSize()
+        ){
+            content()
+        }
     }
 }

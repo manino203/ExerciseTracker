@@ -22,5 +22,10 @@
     <string name="delete">Vymazať</string>
 
     <string name="no_data_yet">Zatiaľ žiadne dáta.</string>
+    <string name="error_text">Niečo sa pokazilo.</string>
+    <string name="import_data">Importovať dáta</string>
+    <string name="export_data">Exportovať dáta</string>
+
+
 
 </resources>

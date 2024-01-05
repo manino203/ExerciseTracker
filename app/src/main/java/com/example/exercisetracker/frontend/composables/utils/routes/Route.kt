@@ -18,7 +18,7 @@ sealed class Route(val destinationName: String, val args: List<NamedNavArgument>
             })
     )
 
-    object ExerciseData : Route(
+    object ExerciseDetails : Route(
         "ExerciseData",
         listOf(
             navArgument("bodyPart") {

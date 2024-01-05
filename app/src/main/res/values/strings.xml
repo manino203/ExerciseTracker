@@ -24,5 +24,8 @@
     <string name="ok" translatable="false">OK</string>
 
     <string name="no_data_yet">No data yet.</string>
+    <string name="error_text">Something went wrong.</string>
+    <string name="import_data">Import data</string>
+    <string name="export_data">Export data</string>
 
 </resources>

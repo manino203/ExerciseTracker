@@ -1,6 +1,7 @@
 package com.example.exercisetracker.backend.di
 
 import android.content.Context
+import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.ExerciseDataRepository
 import com.google.gson.Gson
 import dagger.Module
@@ -31,6 +32,8 @@ object ExerciseModule {
     @Provides
     fun provideIODispatcher() = Dispatchers.IO
 
+    @Provides
+    fun provideTitle(@ApplicationContext context: Context) = context.resources.getString(R.string.app_name)
 }
 
 

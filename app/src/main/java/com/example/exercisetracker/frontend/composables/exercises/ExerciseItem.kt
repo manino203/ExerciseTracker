@@ -28,7 +28,6 @@ import com.example.exercisetracker.frontend.composables.utils.dialogs.ExerciseDi
 import com.example.exercisetracker.frontend.composables.utils.dialogs.FormDialog
 import com.example.exercisetracker.frontend.composables.utils.dialogs.rememberFormState
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExerciseItem(
     modifier: Modifier = Modifier,
@@ -42,7 +41,6 @@ fun ExerciseItem(
     canExpand: MutableState<Boolean> = mutableStateOf(true),
     onExpand: (Exercise, MutableState<Boolean>, SnapshotStateList<ExerciseDetails>) -> Unit
 ) {
-
 
     val graphLoading = remember {
         mutableStateOf(true)
@@ -77,101 +75,17 @@ fun ExerciseItem(
     Accordion(
         isExpanded = isExpanded.value && canExpand.value,
         header = {
-            Item(
-                modifier
-                    .then(it),
-                contentModifier =
-                Modifier
-                    .combinedClickable(
-                        onClick = { onClick(exercise) },
-                        onLongClick = {
-                            dialogOpen = true
-                        }
-                    ),
+            ExerciseItem(
+                dragModifier = dragModifier,
                 elevation = elevation,
-                contentPadding = 16.dp,
-                dragModifier = dragModifier
+                exercise = exercise,
+                isExpanded = isExpanded.value,
+                modifier = modifier.then(it),
+                onClick = { onClick(exercise) },
+                onLongClick = { dialogOpen = true }
             ) {
-
-                Column(
-                    Modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Row(
-                        Modifier
-                            .fillMaxSize(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = exercise.name
-                        )
-                    }
-                    Divider()
-                    Row(
-                        Modifier
-                            .fillMaxSize(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Image(
-                                painterResource(id = R.drawable.dumbbell),
-                                contentDescription = stringResource(id = R.string.weight),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                            )
-                            Text(
-                                (if (exercise.latestDetails != null) "${exercise.latestDetails.weight} kg" else "").toString(),
-                            )
-                        }
-                        Column(
-                            Modifier
-                                .padding(8.dp, 0.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painterResource(id = R.drawable.repetitions),
-                                contentDescription = stringResource(id = R.string.reps),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                            )
-                            Text(
-                                (exercise.latestDetails?.reps ?: "").toString(),
-                            )
-                        }
-                        Column(
-                            Modifier
-                                .padding(8.dp, 0.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painterResource(id = R.drawable.series),
-                                contentDescription = stringResource(id = R.string.series),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                            )
-                            Text(
-                                (exercise.latestDetails?.series ?: "").toString(),
-                            )
-                        }
-                        Icon(
-                            modifier = Modifier
-                                .defaultMinSize(32.dp, 32.dp)
-                                .clip(CircleShape)
-                                .clickable {
-                                    isExpanded.value = !isExpanded.value
-                                    onExpand(exercise, graphLoading, exerciseDetails)
-                                }
-                                .rotate(if (isExpanded.value) 180f else 0f),
-
-                            imageVector = Icons.Outlined.ArrowDropDown,
-                            contentDescription = "arrow-down",
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-
-
-                    }
-                }
+                isExpanded.value = !isExpanded.value
+                onExpand(exercise, graphLoading, exerciseDetails)
             }
         }
     ) {
@@ -192,6 +106,110 @@ fun ExerciseItem(
                     }
                 }
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun ExerciseItem(
+    modifier: Modifier = Modifier,
+    dragModifier: Modifier?,
+    elevation: State<Dp>,
+    exercise: Exercise,
+    isExpanded: Boolean,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    onExpand: () -> Unit
+){
+    Item(
+        modifier,
+        contentModifier =
+        Modifier
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            ),
+        elevation = elevation,
+        contentPadding = 16.dp,
+        dragModifier = dragModifier
+    ) {
+
+        Column(
+            Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                Modifier
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = exercise.name
+                )
+            }
+            Divider()
+            Row(
+                Modifier
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painterResource(id = R.drawable.dumbbell),
+                        contentDescription = stringResource(id = R.string.weight),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                    )
+                    Text(
+                        (if (exercise.latestDetails != null) "${exercise.latestDetails.weight} kg" else "").toString(),
+                    )
+                }
+                Column(
+                    Modifier
+                        .padding(8.dp, 0.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painterResource(id = R.drawable.repetitions),
+                        contentDescription = stringResource(id = R.string.reps),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                    )
+                    Text(
+                        (exercise.latestDetails?.reps ?: "").toString(),
+                    )
+                }
+                Column(
+                    Modifier
+                        .padding(8.dp, 0.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painterResource(id = R.drawable.series),
+                        contentDescription = stringResource(id = R.string.series),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                    )
+                    Text(
+                        (exercise.latestDetails?.series ?: "").toString(),
+                    )
+                }
+                Icon(
+                    modifier = Modifier
+                        .defaultMinSize(32.dp, 32.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            onExpand()
+                        }
+                        .rotate(if (isExpanded) 180f else 0f),
+
+                    imageVector = Icons.Outlined.ArrowDropDown,
+                    contentDescription = "arrow-down",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
     }
 }
