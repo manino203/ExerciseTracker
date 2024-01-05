@@ -68,11 +68,11 @@ class ExerciseDataRepository(
     }
 
     suspend inline fun <reified itemType> readList(key: String): List<itemType> {
-
         return try {
             val type = (object : TypeToken<List<itemType>>() {}).type
             gson.fromJson(readValue(key), type)
-        } catch (e: NullPointerException) {
+        } catch (e: Exception) {
+            e.printStackTrace()
             emptyList()
         }
     }

@@ -54,6 +54,7 @@ fun NavGraphBuilder.ExeriseScreen(
 
         LaunchedEffect(Unit) {
             toolbarViewModel.onScreenChange(Route.Exercises, title)
+            viewModel.getExercises(bodyPartPath)
         }
 
         LaunchedEffect(viewModel.exercisesLoading.value){
@@ -70,12 +71,6 @@ fun NavGraphBuilder.ExeriseScreen(
                 viewModel.addExercise(it)
             },
             onItemClick = { exercise ->
-                viewModel.getDetails(
-                    Path(
-                        bodyPartPath,
-                        exercise.id
-                    )
-                )
                 navController.navigate(
                     Route.ExerciseDetails.createRoute(
                         bodyPartPath,

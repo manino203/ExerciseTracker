@@ -51,6 +51,12 @@ fun NavGraphBuilder.ExerciseDetailsScreen(
         val appName = stringResource(id = R.string.app_name)
         LaunchedEffect(Unit){
             toolbarViewModel.onScreenChange(Route.ExerciseDetails, viewModel.getExerciseById(exercise)?.name ?: appName)
+            viewModel.getDetails(
+                Path(
+                    bodyPart,
+                    exercise
+                )
+            )
         }
 
         LaunchedEffect(viewModel.detailsLoading.value){
