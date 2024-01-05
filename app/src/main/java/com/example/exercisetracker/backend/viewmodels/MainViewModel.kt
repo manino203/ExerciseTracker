@@ -29,25 +29,14 @@ class MainViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    companion object {
-        private const val BODY_PARTS_PATH =
-            "7466e74f83c475325ee39d4a5aefda0d3878bcca04dedc9fbd81d13429e9c2c2"
-    }
 
-    private val DEFAULT_BODY_PARTS = listOf(
-            BodyPart("Biceps", R.string.biceps),
-            BodyPart("Triceps", R.string.triceps),
-            BodyPart("Shoulders", R.string.shoulders),
-            BodyPart("Chest", R.string.chest),
-            BodyPart("Abs", R.string.abs),
-            BodyPart("Back", R.string.back),
-            BodyPart("Legs", R.string.legs)
-        )
 
-    val bodyParts = mutableStateListOf<BodyPart>()
+
+
+
     var details: SnapshotStateList<ExerciseDetails> = mutableStateListOf()
     var exercises: SnapshotStateList<Exercise> = mutableStateListOf()
-    var bodyPartsLoading = mutableStateOf(true)
+
     var detailsLoading = mutableStateOf(true)
     var exercisesLoading = mutableStateOf(true)
 
@@ -59,42 +48,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getBodyParts() {
-        viewModelScope.launch(ioDispatcher) {
-            bodyPartsLoading.value = true
-            bodyParts.clear()
-
-            bodyParts.addAll(suspend {
-                    try{
-                        repo.readList<BodyPart>(BODY_PARTS_PATH).toMutableStateList()
-                    } catch(e: JsonSyntaxException){
-                        listOf()
-                    }
-                }()
-            )
-            if (bodyParts.isEmpty()) {
-                bodyParts.addAll(DEFAULT_BODY_PARTS)
-                saveBodyParts()
-            }
-            bodyPartsLoading.value = false
-        }
-    }
-
-    private fun saveBodyParts(loading: Boolean = true) {
-        viewModelScope.launch(ioDispatcher) {
-            bodyPartsLoading.value = loading
-            repo.saveList(BODY_PARTS_PATH, bodyParts)
-            bodyPartsLoading.value = false
-        }
-    }
-
-    fun onBodyPartMove(
-        fromIndex: Int,
-        toIndex: Int
-    ) {
-        onItemMove(bodyParts, fromIndex, toIndex)
-        saveBodyParts(false)
-    }
 
     fun onExerciseMove(
         path: String,
@@ -104,17 +57,6 @@ class MainViewModel @Inject constructor(
         onItemMove(exercises, fromIndex, toIndex)
         saveExercises(path, false)
     }
-
-    fun getBodyPartByPath(path: String): BodyPart?{
-        return try{
-            bodyParts.first {
-                it.path == path
-            }
-        }catch (e: NoSuchElementException){
-            null
-        }
-    }
-
     fun getExerciseById(id: String): Exercise?{
         return try{
             exercises.first {
@@ -225,17 +167,17 @@ class MainViewModel @Inject constructor(
 
     val exportFileUri = mutableStateOf<Uri?>(null)
 
-    fun exportData(){
-        bodyPartsLoading.value = true
-        viewModelScope.launch(ioDispatcher){
-            exportFileUri.value = null
-            delay(100L)
-            exportFileUri.value = repo.getDataUri()
-            bodyPartsLoading.value = false
-        }
-    }
+//    fun exportData(){
+//        bodyPartsLoading.value = true
+//        viewModelScope.launch(ioDispatcher){
+//            exportFileUri.value = null
+//            delay(100L)
+//            exportFileUri.value = repo.getDataUri()
+//            bodyPartsLoading.value = false
+//        }
+//    }
 
-    fun importData(){
+//    fun importData(){
 //        val initialUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 //            MediaStore.Downloads.EXTERNAL_CONTENT_URI
 //        } else {
@@ -247,7 +189,6 @@ class MainViewModel @Inject constructor(
 //            type = "*/*"
 //            putExtra(DocumentsContract.EXTRA_INITIAL_URI, initialUri)
 //        })
-    }
-
+//    }
 }
 

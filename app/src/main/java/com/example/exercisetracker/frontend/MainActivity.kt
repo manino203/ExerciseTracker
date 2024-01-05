@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -79,36 +80,35 @@ private fun AppContent(viewModel: MainViewModel, toolbarViewModel: ToolbarViewMo
                         exportData = {}
                     )
                 },
-            content = { padding ->
-                Box(
-                    Modifier.padding(padding)
-                ){
+                content = { padding ->
+                    Box(
+                        Modifier.padding(padding)
+                    ){
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = Route.BodyParts.route
-                    ) {
+                        NavHost(
+                            navController = navController,
+                            startDestination = Route.BodyParts.route
+                        ) {
 
-                        BodyPartsScreen(
-                            toolbarViewModel = toolbarViewModel,
-                            viewModel = viewModel,
-                            navController = navController
-                        )
+                            BodyPartsScreen(
+                                toolbarViewModel = toolbarViewModel,
+                                navController = navController
+                            )
 
-                        ExeriseScreen(
-                            viewModel =  viewModel,
-                            toolbarViewModel = toolbarViewModel,
-                            navController = navController
-                        )
+                            ExeriseScreen(
+                                viewModel =  viewModel,
+                                toolbarViewModel = toolbarViewModel,
+                                navController = navController
+                            )
 
-                        ExerciseDetailsScreen(
-                            viewModel = viewModel,
-                            toolbarViewModel = toolbarViewModel,
-                        )
+                            ExerciseDetailsScreen(
+                                viewModel = viewModel,
+                                toolbarViewModel = toolbarViewModel,
+                            )
 
+                        }
                     }
                 }
-            }
             )
         }
     }
@@ -118,8 +118,8 @@ private fun AppContent(viewModel: MainViewModel, toolbarViewModel: ToolbarViewMo
 @Composable
 fun AppPreview()
 {
-    val viewModel: MainViewModel by viewModel()
-    val toolbarViewModel: ToolbarViewModel by viewModel()
+    val viewModel: MainViewModel = hiltViewModel()
+    val toolbarViewModel: ToolbarViewModel = hiltViewModel()
 
     AppContent(viewModel = viewModel, toolbarViewModel)
 }

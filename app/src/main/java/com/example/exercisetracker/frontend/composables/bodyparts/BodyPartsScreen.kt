@@ -3,11 +3,13 @@ package com.example.exercisetracker.frontend.composables.bodyparts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.BodyPart
+import com.example.exercisetracker.backend.viewmodels.BodyPartsViewModel
 import com.example.exercisetracker.backend.viewmodels.MainViewModel
 import com.example.exercisetracker.backend.viewmodels.ToolbarViewModel
 import com.example.exercisetracker.frontend.composables.Screen
@@ -17,10 +19,10 @@ import com.example.exercisetracker.frontend.composables.utils.routes.Route
 @Suppress("FunctionName")
 fun NavGraphBuilder.BodyPartsScreen(
     toolbarViewModel: ToolbarViewModel,
-    viewModel: MainViewModel,
     navController: NavController
 ){
     composable(Route.BodyParts.route) {
+        val viewModel: BodyPartsViewModel = hiltViewModel()
         val appName = stringResource(id = R.string.app_name)
         LaunchedEffect(Unit) {
             toolbarViewModel.onScreenChange(Route.BodyParts, appName)
@@ -34,7 +36,7 @@ fun NavGraphBuilder.BodyPartsScreen(
         BodyPartsScreen(
             bodyParts = viewModel.bodyParts,
             onItemClick = {
-                viewModel.getExercises(it)
+//                viewModel.getExercises(it)
                 navController.navigate(Route.Exercises.createRoute(it))
             },
             onSwap = { from: Int, to: Int ->
