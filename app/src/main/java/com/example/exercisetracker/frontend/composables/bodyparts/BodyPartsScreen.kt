@@ -4,12 +4,13 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.BodyPart
-import com.example.exercisetracker.backend.viewmodels.MainViewModel
+import com.example.exercisetracker.backend.viewmodels.BodyPartsViewModel
 import com.example.exercisetracker.backend.viewmodels.ToolbarViewModel
 import com.example.exercisetracker.frontend.composables.Screen
 import com.example.exercisetracker.frontend.composables.utils.ReorderableLazyColumn
@@ -18,11 +19,10 @@ import com.example.exercisetracker.frontend.composables.utils.routes.Route
 @Suppress("FunctionName")
 fun NavGraphBuilder.BodyPartsScreen(
     toolbarViewModel: ToolbarViewModel,
-    viewModel: MainViewModel,
     navController: NavController
 ){
     composable(Route.BodyParts.route) {
-//        val viewModel: BodyPartsViewModel = hiltViewModel()
+        val viewModel: BodyPartsViewModel = hiltViewModel()
         val appName = stringResource(id = R.string.app_name)
         LaunchedEffect(Unit) {
             toolbarViewModel.onScreenChange(Route.BodyParts, appName)
@@ -30,8 +30,8 @@ fun NavGraphBuilder.BodyPartsScreen(
 
         }
 
-        LaunchedEffect(viewModel.bodyPartsLoading.value){
-            toolbarViewModel.updateLoading(viewModel.bodyPartsLoading.value)
+        LaunchedEffect(viewModel.isLoading.value){
+            toolbarViewModel.updateLoading(viewModel.isLoading.value)
             viewModel.bodyParts.forEach {
                 Log.d("composable: ${it.path}", "${ it.label }")
             }
@@ -40,8 +40,7 @@ fun NavGraphBuilder.BodyPartsScreen(
         BodyPartsScreen(
             bodyParts = viewModel.bodyParts,
             onItemClick = {
-//                viewModel.getExercises(it)
-                navController.navigate(Route.Exercises.createRoute(it))
+                navController.navigate(Route.Exercises.createRoute(it.path, it.label.toString()))
             },
             onSwap = { from: Int, to: Int ->
                 viewModel.onBodyPartMove(from, to)
@@ -57,7 +56,7 @@ fun NavGraphBuilder.BodyPartsScreen(
 @Composable
 private fun BodyPartsScreen(
     bodyParts: List<BodyPart>,
-    onItemClick: (String) -> Unit,
+    onItemClick: (BodyPart) -> Unit,
     onSwap: (Int, Int) -> Unit,
     onDragEnd: () -> Unit,
 ) {
@@ -77,7 +76,7 @@ private fun BodyPartsScreen(
                 dragModifier = dh,
                 elevation = elevation
             ) {
-                onItemClick(bp.path)
+                onItemClick(bp)
             }
         }
     }

@@ -90,18 +90,15 @@ private fun AppContent(viewModel: MainViewModel, toolbarViewModel: ToolbarViewMo
 
                             BodyPartsScreen(
                                 toolbarViewModel = toolbarViewModel,
-                                viewModel = viewModel,
                                 navController = navController
                             )
 
                             ExeriseScreen(
-                                viewModel =  viewModel,
                                 toolbarViewModel = toolbarViewModel,
                                 navController = navController
                             )
 
                             ExerciseDetailsScreen(
-                                viewModel = viewModel,
                                 toolbarViewModel = toolbarViewModel,
                             )
 

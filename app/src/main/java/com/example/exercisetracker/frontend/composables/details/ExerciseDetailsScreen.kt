@@ -13,13 +13,14 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.exercisetracker.R
 import com.example.exercisetracker.backend.data.DataClassFactory
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.backend.data.Path
-import com.example.exercisetracker.backend.viewmodels.MainViewModel
+import com.example.exercisetracker.backend.viewmodels.DetailsViewModel
 import com.example.exercisetracker.backend.viewmodels.ToolbarViewModel
 import com.example.exercisetracker.frontend.composables.Screen
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter.Companion.dateFormat
@@ -36,13 +37,13 @@ import java.util.Locale
 
 @Suppress("FunctionName")
 fun NavGraphBuilder.ExerciseDetailsScreen(
-    viewModel: MainViewModel,
     toolbarViewModel: ToolbarViewModel,
 ){
     composable(
         Route.ExerciseDetails.route,
         Route.ExerciseDetails.args
     ) {
+        val viewModel: DetailsViewModel = hiltViewModel()
         val bodyPart by remember { mutableStateOf(it.arguments?.getString(Route.ExerciseDetails.args[0].name)!!) }
         val exercise by remember { mutableStateOf(it.arguments?.getString(Route.ExerciseDetails.args[1].name)!!) }
         val path by remember {
@@ -50,7 +51,7 @@ fun NavGraphBuilder.ExerciseDetailsScreen(
         }
         val appName = stringResource(id = R.string.app_name)
         LaunchedEffect(Unit){
-            toolbarViewModel.onScreenChange(Route.ExerciseDetails, viewModel.getExerciseById(exercise)?.name ?: appName)
+            toolbarViewModel.onScreenChange(Route.ExerciseDetails, it.arguments?.getString(Route.ExerciseDetails.args[2].name) ?: appName)
             viewModel.getDetails(
                 Path(
                     bodyPart,
@@ -59,8 +60,8 @@ fun NavGraphBuilder.ExerciseDetailsScreen(
             )
         }
 
-        LaunchedEffect(viewModel.detailsLoading.value){
-            toolbarViewModel.updateLoading(viewModel.detailsLoading.value)
+        LaunchedEffect(viewModel.isLoading.value){
+            toolbarViewModel.updateLoading(viewModel.isLoading.value)
         }
 
         ExerciseDetailsScreen(

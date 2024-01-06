@@ -12,6 +12,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -20,7 +21,7 @@ import com.example.exercisetracker.backend.data.DataClassFactory
 import com.example.exercisetracker.backend.data.Exercise
 import com.example.exercisetracker.backend.data.ExerciseDetails
 import com.example.exercisetracker.backend.data.Path
-import com.example.exercisetracker.backend.viewmodels.MainViewModel
+import com.example.exercisetracker.backend.viewmodels.ExercisesViewModel
 import com.example.exercisetracker.backend.viewmodels.ToolbarViewModel
 import com.example.exercisetracker.frontend.composables.Screen
 import com.example.exercisetracker.frontend.composables.utils.ReorderableLazyColumn
@@ -32,7 +33,6 @@ import com.example.exercisetracker.frontend.composables.utils.routes.Route
 
 @Suppress("FunctionName")
 fun NavGraphBuilder.ExeriseScreen(
-    viewModel: MainViewModel,
     toolbarViewModel: ToolbarViewModel,
     navController: NavController
 ){
@@ -40,6 +40,7 @@ fun NavGraphBuilder.ExeriseScreen(
         Route.Exercises.route,
         Route.Exercises.args
     ) {
+        val viewModel: ExercisesViewModel = hiltViewModel()
         val bodyPartPath by remember {
             mutableStateOf(
                 it.arguments?.getString(
@@ -49,7 +50,9 @@ fun NavGraphBuilder.ExeriseScreen(
         }
 
         val title = stringResource(
-            viewModel.getBodyPartByPath(bodyPartPath)?.label ?: R.string.app_name
+            it.arguments?.getString(
+                Route.Exercises.args[1].name
+            )?.toInt() ?: R.string.app_name
         )
 
         LaunchedEffect(Unit) {
@@ -57,8 +60,8 @@ fun NavGraphBuilder.ExeriseScreen(
             viewModel.getExercises(bodyPartPath)
         }
 
-        LaunchedEffect(viewModel.exercisesLoading.value){
-            toolbarViewModel.updateLoading(viewModel.exercisesLoading.value)
+        LaunchedEffect(viewModel.isLoading.value){
+            toolbarViewModel.updateLoading(viewModel.isLoading.value)
         }
 
         ExercisesScreen(
@@ -74,7 +77,8 @@ fun NavGraphBuilder.ExeriseScreen(
                 navController.navigate(
                     Route.ExerciseDetails.createRoute(
                         bodyPartPath,
-                        exercise.id
+                        exercise.id,
+                        exercise.name
                     )
                 )
             },
@@ -89,7 +93,7 @@ fun NavGraphBuilder.ExeriseScreen(
                 )
             },
             onDragEnd = {
-                viewModel.saveExercises(bodyPartPath)
+                viewModel.saveExercises(bodyPartPath, viewModel.exercises)
             },
             onAccordionExpand = { exercise, loading, details ->
                 viewModel.getDetails(
