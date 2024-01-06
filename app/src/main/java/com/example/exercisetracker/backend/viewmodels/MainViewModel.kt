@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.exercisetracker.backend.data.ExerciseDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,30 +19,30 @@ class MainViewModel @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
+    val isLoading = mutableStateOf(false)
 
-    val exportFileUri = mutableStateOf<Uri?>(null)
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
 
-    fun exportData(){
+    fun exportData(failMessage: String, launchActivity: (Uri) -> Unit,){
         viewModelScope.launch(ioDispatcher){
-            exportFileUri.value = null
-            delay(100L)
-            exportFileUri.value = repo.getDataUri()
+            isLoading.value = true
+            val exportFileUri = repo.getDataUri()
+            isLoading.value = false
+            exportFileUri?.let{
+                launchActivity(it)
+                return@launch
+            }
+            _toastMessage.emit(failMessage)
         }
     }
 
-    fun importData(){
-//        val initialUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//            MediaStore.Downloads.EXTERNAL_CONTENT_URI
-//        } else {
-//            Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))
-//        }
-//        remember
-//        context.startActivity(Intent(Intent.ACTION_OPEN_DOCUMENT).apply{
-//            addCategory(Intent.CATEGORY_OPENABLE)
-//            type = "*/*"
-//            putExtra(DocumentsContract.EXTRA_INITIAL_URI, initialUri)
-//        })
+    fun importData(uri: Uri, failMessage: String){
+        viewModelScope.launch(ioDispatcher) {
+            if(!repo.importData(uri)){
+                _toastMessage.emit(failMessage)
+            }
+        }
     }
-
 }
 

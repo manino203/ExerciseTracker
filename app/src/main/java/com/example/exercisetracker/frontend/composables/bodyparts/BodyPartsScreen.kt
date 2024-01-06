@@ -1,6 +1,5 @@
 package com.example.exercisetracker.frontend.composables.bodyparts
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.res.stringResource
@@ -32,9 +31,6 @@ fun NavGraphBuilder.BodyPartsScreen(
 
         LaunchedEffect(viewModel.isLoading.value){
             toolbarViewModel.updateLoading(viewModel.isLoading.value)
-            viewModel.bodyParts.forEach {
-                Log.d("composable: ${it.path}", "${ it.label }")
-            }
         }
 
         BodyPartsScreen(

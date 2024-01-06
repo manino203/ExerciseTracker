@@ -25,6 +25,8 @@
     <string name="error_text">Niečo sa pokazilo.</string>
     <string name="import_data">Importovať dáta</string>
     <string name="export_data">Exportovať dáta</string>
+    <string name="export_fail">Exportovanie dát zlyhalo.</string>
+    <string name="import_fail">Importovanie dát zlyhalo.</string>
 
 
 

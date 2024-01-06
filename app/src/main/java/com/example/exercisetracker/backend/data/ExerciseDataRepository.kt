@@ -1,12 +1,7 @@
 package com.example.exercisetracker.backend.data
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.provider.DocumentsContract
-import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.edit
@@ -15,8 +10,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.exercisetracker.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import java.io.File
 import java.io.FileWriter
@@ -28,7 +21,6 @@ class ExerciseDataRepository(
     val gson: Gson
 ) {
 
-    val scope = CoroutineScope(Dispatchers.IO)
     companion object {
         const val FILE_NAME = "exercises"
         val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences> by preferencesDataStore(
@@ -83,9 +75,9 @@ class ExerciseDataRepository(
     }
 
 
-    suspend fun getDataUri(): Uri?{
+    suspend fun getDataUri(): Uri? {
         var uri: Uri? = null
-        val filePath = "data"
+        val filePath = "data.txt"
         val file = File(context.filesDir, filePath)
         if (file.exists()) {
             file.delete()
@@ -103,7 +95,8 @@ class ExerciseDataRepository(
         writer.close()
 
         try {
-            uri = FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", file)
+            uri =
+                FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.provider", file)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -115,19 +108,59 @@ class ExerciseDataRepository(
         return uri
     }
 
-    fun importData(){
-        val initialUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            MediaStore.Downloads.EXTERNAL_CONTENT_URI
-        } else {
-            Uri.fromFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))
+    suspend fun importData(uri: Uri): Boolean {
+        var success = false
+        val inputStream = context.contentResolver.openInputStream(uri)
+        context.dataStore.edit { prefs ->
+
+            inputStream?.let { stream ->
+                stream.reader().readLines().map { line ->
+                    line.split(Regex(" = "), 2)
+                }.takeIf {
+                    validateImportData(it)
+                }?.let { data ->
+                    prefs.clear()
+                    data.forEach {
+                        prefs[stringPreferencesKey(it[0])] = it[1]
+                    }
+                    success = true
+                }
+            }
         }
-        context.startActivity(Intent(Intent.ACTION_OPEN_DOCUMENT).apply{
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "*/*"
-            putExtra(DocumentsContract.EXTRA_INITIAL_URI, initialUri)
-        })
+        inputStream?.close()
+        return success
     }
 
+    private fun validateImportData(lines: List<List<String>>): Boolean {
+
+        fun <T> isConvertableToObject(value: String): Boolean {
+            return try {
+                val type = (object : TypeToken<List<T>>() {}).type
+                gson.fromJson<List<T>>(value, type)
+                true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
+        }
+
+
+        lines.forEach { pair ->
+            try {
+                if (
+                    !(isConvertableToObject<BodyPart>(pair[1]) ||
+                            isConvertableToObject<Exercise>(pair[1]) ||
+                            isConvertableToObject<ExerciseDetails>(pair[1]))
+                ) {
+                    return false
+                }
+            } catch (e: IndexOutOfBoundsException) {
+                return false
+            }
+        }
+
+        return true
+    }
 }
 
 

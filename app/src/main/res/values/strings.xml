@@ -27,5 +27,8 @@
     <string name="error_text">Something went wrong.</string>
     <string name="import_data">Import data</string>
     <string name="export_data">Export data</string>
+    <string name="export_fail">Exporting data failed.</string>
+    <string name="import_fail">Importing data failed.</string>
+
 
 </resources>

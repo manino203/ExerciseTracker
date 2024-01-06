@@ -32,25 +32,25 @@ import com.example.exercisetracker.frontend.composables.utils.routes.Route
 
 
 @Suppress("FunctionName")
-fun NavGraphBuilder.ExeriseScreen(
+fun NavGraphBuilder.ExerciseScreen(
     toolbarViewModel: ToolbarViewModel,
-    navController: NavController
+    navController: NavController,
 ){
     composable(
         Route.Exercises.route,
         Route.Exercises.args
-    ) {
+    ) { navBackStackEntry ->
         val viewModel: ExercisesViewModel = hiltViewModel()
         val bodyPartPath by remember {
             mutableStateOf(
-                it.arguments?.getString(
+                navBackStackEntry.arguments?.getString(
                     Route.Exercises.args[0].name
                 )!!
             )
         }
 
         val title = stringResource(
-            it.arguments?.getString(
+            navBackStackEntry.arguments?.getString(
                 Route.Exercises.args[1].name
             )?.toInt() ?: R.string.app_name
         )
