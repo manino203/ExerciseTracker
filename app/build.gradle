@@ -8,10 +8,10 @@ plugins {
 android {
     signingConfigs {
         release {
-            storeFile file('/home/manino/StudioProjects/ExerciseTracker/app/Key.jks')
-            storePassword '#Pokemon12345'
+            storeFile file('/home/manino/StudioProjects/XTracker/XTracker_keystore.jks')
+            storePassword 'XTracker_key'
             keyAlias 'key0'
-            keyPassword '#Pokemon12345'
+            keyPassword 'XTracker_key'
         }
     }
     namespace 'com.example.exercisetracker'
