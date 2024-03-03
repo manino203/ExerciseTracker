@@ -3,7 +3,10 @@ package com.example.exercisetracker.frontend.composables.details
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,8 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.example.exercisetracker.R
-import com.example.exercisetracker.backend.data.DataClassFactory
-import com.example.exercisetracker.backend.data.ExerciseDetails
+import com.example.exercisetracker.backend.data.db.DataClassFactory
+import com.example.exercisetracker.backend.data.db.entities.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter
 import com.example.exercisetracker.frontend.composables.utils.Item
 import com.example.exercisetracker.frontend.composables.utils.dialogs.CalendarDialog
@@ -39,9 +42,10 @@ fun ExerciseDetailsItem(
     modifier: Modifier = Modifier,
     details: ExerciseDetails,
     index: Int,
+    exerciseId: Int,
     elevation: State<Dp>,
     onDelete: (Int) -> Unit,
-    editItem: (ExerciseDetails, Int) -> Unit,
+    editItem: (ExerciseDetails) -> Unit,
 ) {
 
     var dialogOpen by remember {
@@ -69,7 +73,8 @@ fun ExerciseDetailsItem(
                 dialogOpen = false
             },
             onConfirm = {
-                editItem(DataClassFactory.createExerciseDetails(formState.values.map { it.value }) , index)
+                editItem(DataClassFactory.createExerciseDetails(formState.values.map { it.value }, exerciseId, details.id))
+                true
             }
         )
     }

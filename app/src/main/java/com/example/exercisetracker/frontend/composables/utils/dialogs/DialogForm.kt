@@ -5,8 +5,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.example.exercisetracker.R
-import com.example.exercisetracker.backend.data.Exercise
-import com.example.exercisetracker.backend.data.ExerciseDetails
+import com.example.exercisetracker.backend.data.db.entities.Exercise
+import com.example.exercisetracker.backend.data.db.entities.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter
 import java.time.Instant
 

@@ -1,62 +1,68 @@
 package com.example.exercisetracker.backend.viewmodels
 
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.exercisetracker.R
-import com.example.exercisetracker.backend.data.BodyPart
-import com.example.exercisetracker.backend.data.ExerciseDataRepository
+import com.example.exercisetracker.backend.data.db.ExerciseDataRepository
+import com.example.exercisetracker.backend.data.db.entities.BodyPart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class BodyPartsUiState(
+    val loading: Boolean = true,
+    val bodyParts: List<BodyPart> = emptyList()
+)
+
 @HiltViewModel
 class BodyPartsViewModel @Inject constructor(
-    repo: ExerciseDataRepository,
-    ioDispatcher: CoroutineDispatcher
-) : ScreenViewModel(repo, ioDispatcher){
+    private val repo: ExerciseDataRepository,
+    private val ioDispatcher: CoroutineDispatcher
+): ViewModel() {
 
-    companion object {
-        private const val BODY_PARTS_PATH =
-            "7466e74f83c475325ee39d4a5aefda0d3878bcca04dedc9fbd81d13429e9c2c2"
-    }
 
     private val DEFAULT_BODY_PARTS = listOf(
-        BodyPart("Biceps", R.string.biceps),
-        BodyPart("Triceps", R.string.triceps),
-        BodyPart("Shoulders", R.string.shoulders),
-        BodyPart("Chest", R.string.chest),
-        BodyPart("Abs", R.string.abs),
-        BodyPart("Back", R.string.back),
-        BodyPart("Legs", R.string.legs)
+        BodyPart("Biceps", 0, R.string.biceps),
+        BodyPart("Triceps", 1, R.string.triceps),
+        BodyPart("Shoulders", 2, R.string.shoulders),
+        BodyPart("Chest", 3, R.string.chest),
+        BodyPart("Abs", 4, R.string.abs),
+        BodyPart("Back", 5, R.string.back),
+        BodyPart("Legs", 6, R.string.legs)
     )
-    val bodyParts = mutableStateListOf<BodyPart>()
+
+    var uiState by mutableStateOf(BodyPartsUiState())
 
     fun getBodyParts() {
-        viewModelScope.launch(ioDispatcher) {
-            bodyParts.clear()
-            bodyParts.addAll(getItems<BodyPart>(BODY_PARTS_PATH))
-            if (bodyParts.isEmpty()) {
-                bodyParts.addAll(DEFAULT_BODY_PARTS)
-                saveBodyParts()
+        viewModelScope.launch(ioDispatcher){
+            uiState = uiState.copy(loading = true)
+            repo.getBodyParts().collect{
+                if (it.isEmpty()){
+                    repo.updateBodyParts(DEFAULT_BODY_PARTS)
+                }else {
+                    uiState = uiState.copy(bodyParts = it)
+                }
+                uiState = uiState.copy(loading = false)
             }
         }
     }
-
-    private fun saveBodyParts(loading: Boolean = true) {
-        viewModelScope.launch(ioDispatcher) {
-            isLoading.value = loading
-            repo.saveList(BODY_PARTS_PATH, bodyParts)
-            isLoading.value = false
-        }
-    }
-
 
     fun onBodyPartMove(
         fromIndex: Int,
         toIndex: Int
     ) {
-        onItemMove(bodyParts, fromIndex, toIndex)
-        saveBodyParts(false)
+        viewModelScope.launch(ioDispatcher) {
+            val tempPos = -1
+            val fromPos = uiState.bodyParts[fromIndex].position
+            val toPos = uiState.bodyParts[toIndex].position
+            repo.updateBodyPart(uiState.bodyParts[fromIndex].copy(position = tempPos))
+            repo.updateBodyPart(uiState.bodyParts[toIndex].copy(position = fromPos))
+            repo.updateBodyPart(uiState.bodyParts[fromIndex].copy(position = toPos))
+
+        }
     }
 }

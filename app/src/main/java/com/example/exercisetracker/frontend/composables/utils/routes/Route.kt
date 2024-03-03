@@ -5,7 +5,7 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
-sealed class Route(val destinationName: String, val args: List<NamedNavArgument> = listOf()) {
+sealed class Route(private val destinationName: String, val args: List<NamedNavArgument> = listOf()) {
 
     val route: String = destinationName.plus(args.joinToString { "/{${it.name}}" })
 
@@ -14,30 +14,21 @@ sealed class Route(val destinationName: String, val args: List<NamedNavArgument>
         return "$destinationName${args.joinToString { "/$it" }}"
     }
 
-    object BodyParts : Route("BodyParts")
-    object Exercises : Route(
+    data object BodyParts : Route("BodyParts")
+    data object Exercises : Route(
         "Exercises", listOf(
-            navArgument("bodyPart") {
-                type = NavType.StringType
-            },
-            navArgument("bodyPartLabel"){
-                type = NavType.StringType
+            navArgument("bodyPartId") {
+                type = NavType.IntType
             }
-            )
-
+        )
     )
 
-    object ExerciseDetails : Route(
+    data object ExerciseDetails : Route(
         "ExerciseData",
         listOf(
-            navArgument("bodyPart") {
-                type = NavType.StringType
-            },
-            navArgument("exercise") {
-                type = NavType.StringType
-            },
-            navArgument("exerciseName") {
-                type = NavType.StringType
+            navArgument("exerciseId") {
+                type = NavType.IntType
             }
-        ))
+        )
+    )
 }

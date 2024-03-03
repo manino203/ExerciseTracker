@@ -5,22 +5,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.exercisetracker.R
-import com.example.exercisetracker.backend.data.DataClassFactory
-import com.example.exercisetracker.backend.data.Exercise
-import com.example.exercisetracker.backend.data.ExerciseDetails
-import com.example.exercisetracker.backend.data.Path
+import com.example.exercisetracker.backend.data.db.DataClassFactory
+import com.example.exercisetracker.backend.data.db.entities.Exercise
+import com.example.exercisetracker.backend.data.db.entities.ExerciseDetails
 import com.example.exercisetracker.backend.viewmodels.ExercisesViewModel
 import com.example.exercisetracker.backend.viewmodels.ToolbarViewModel
 import com.example.exercisetracker.frontend.composables.Screen
@@ -40,33 +38,31 @@ fun NavGraphBuilder.ExerciseScreen(
         Route.Exercises.route,
         Route.Exercises.args
     ) { navBackStackEntry ->
+        val context = LocalContext.current
         val viewModel: ExercisesViewModel = hiltViewModel()
-        val bodyPartPath by remember {
-            mutableStateOf(
-                navBackStackEntry.arguments?.getString(
+        val uiState = viewModel.uiState
+        val bodyPartId by remember {
+            mutableIntStateOf(
+                navBackStackEntry.arguments?.getInt(
                     Route.Exercises.args[0].name
                 )!!
             )
         }
 
-        val title = stringResource(
-            navBackStackEntry.arguments?.getString(
-                Route.Exercises.args[1].name
-            )?.toInt() ?: R.string.app_name
-        )
-
         LaunchedEffect(Unit) {
-            toolbarViewModel.onScreenChange(Route.Exercises, title)
-            viewModel.getExercises(bodyPartPath)
+            viewModel.updateTitle(bodyPartId) {
+                toolbarViewModel.onScreenChange(Route.Exercises, context.getString(it))
+            }
+            viewModel.getExercises(bodyPartId)
         }
 
-        LaunchedEffect(viewModel.isLoading.value){
-            toolbarViewModel.updateLoading(viewModel.isLoading.value)
+        LaunchedEffect(uiState.loading){
+            toolbarViewModel.updateLoading(uiState.loading)
         }
 
         ExercisesScreen(
-            exercises = viewModel.exercises,
-            bodyPartPath = bodyPartPath,
+            exercises = uiState.exercises,
+            bpId = bodyPartId,
             onEdit = { newName, exercise ->
                 viewModel.editExercise(newName, exercise)
             },
@@ -76,9 +72,7 @@ fun NavGraphBuilder.ExerciseScreen(
             onItemClick = { exercise ->
                 navController.navigate(
                     Route.ExerciseDetails.createRoute(
-                        bodyPartPath,
-                        exercise.id,
-                        exercise.name
+                        exercise.id.toString()
                     )
                 )
             },
@@ -87,17 +81,13 @@ fun NavGraphBuilder.ExerciseScreen(
             },
             onSwap = { from: Int, to: Int ->
                 viewModel.onExerciseMove(
-                    bodyPartPath,
                     from,
                     to
                 )
             },
-            onDragEnd = {
-                viewModel.saveExercises(bodyPartPath, viewModel.exercises)
-            },
             onAccordionExpand = { exercise, loading, details ->
-                viewModel.getDetails(
-                    Path(bodyPartPath, exercise.id),
+                viewModel.getDetailsForGraph(
+                    exercise,
                     loading,
                     details
                 )
@@ -108,15 +98,14 @@ fun NavGraphBuilder.ExerciseScreen(
 
 @Composable
 private fun ExercisesScreen(
-    exercises: SnapshotStateList<Exercise>,
-    bodyPartPath: String,
-    onEdit: (String, Exercise) -> Unit,
-    addItem: (Exercise) -> Unit,
+    exercises: List<Pair<Exercise, ExerciseDetails?>>,
+    bpId: Int,
+    onEdit: (String, Exercise) -> Boolean,
+    addItem: (Exercise) -> Boolean,
     onItemClick: (Exercise) -> Unit,
     onDelete: (Exercise) -> Unit,
     onSwap: (Int, Int) -> Unit,
-    onDragEnd: () -> Unit,
-    onAccordionExpand: (Exercise, MutableState<Boolean>, SnapshotStateList<ExerciseDetails>) -> Unit
+    onAccordionExpand: (Exercise, MutableState<Boolean>, MutableState<List<ExerciseDetails>>) -> Unit
 ) {
 
     val canExpand = remember {
@@ -124,7 +113,7 @@ private fun ExercisesScreen(
     }
 
     val expandedStates = remember {
-        mapOf<String, MutableState<Boolean>>()
+        mapOf<Int, MutableState<Boolean>>()
     }.toMutableMap()
 
     var dialogOpen by remember {
@@ -140,7 +129,7 @@ private fun ExercisesScreen(
                 dialogOpen = false
             },
             onConfirm = {
-                addItem(DataClassFactory.createExercise(formState.values.map { it.value }, bodyPartPath))
+                addItem(DataClassFactory.createExercise(formState.values.map { it.value }, bpId))
             }
         )
     }
@@ -162,11 +151,10 @@ private fun ExercisesScreen(
             },
             onDragEnd = { _, _ ->
                 canExpand.value = true
-                onDragEnd()
             }
         ) { _, exercise, dragModifier, elevation ->
 
-            expandedStates[exercise.id] = remember { mutableStateOf(false) }
+            expandedStates[exercise.first.id!!] = remember { mutableStateOf(false) }
 
             ExerciseItem(
                 Modifier
@@ -175,7 +163,7 @@ private fun ExercisesScreen(
                 onClick = onItemClick,
                 dragModifier = dragModifier,
                 elevation = elevation,
-                isExpanded = expandedStates[exercise.id]!!,
+                isExpanded = expandedStates[exercise.first.id]!!,
                 canExpand = canExpand,
                 onExpand = onAccordionExpand,
                 editItem = onEdit,

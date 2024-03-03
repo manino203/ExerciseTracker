@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
-import com.example.exercisetracker.backend.data.ExerciseDetails
+import com.example.exercisetracker.backend.data.db.entities.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.DateFormatter
 import com.example.exercisetracker.frontend.composables.utils.chart.*
 import com.example.exercisetracker.frontend.composables.utils.setAlpha

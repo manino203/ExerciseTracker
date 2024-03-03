@@ -1,67 +1,93 @@
 package com.example.exercisetracker.backend.viewmodels
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.exercisetracker.backend.data.Exercise
-import com.example.exercisetracker.backend.data.ExerciseDataRepository
-import com.example.exercisetracker.backend.data.Path
+import com.example.exercisetracker.backend.data.db.ExerciseDataRepository
+import com.example.exercisetracker.backend.data.db.entities.Exercise
+import com.example.exercisetracker.backend.data.db.entities.ExerciseDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class ExercisesUiState(
+    val loading: Boolean = true,
+    val exercises: List<Pair<Exercise, ExerciseDetails?>> = emptyList()
+)
+
 @HiltViewModel
 class ExercisesViewModel @Inject constructor(
-    repo: ExerciseDataRepository,
-    ioDispatcher: CoroutineDispatcher
-): ScreenViewModel(repo, ioDispatcher) {
+    private val repo: ExerciseDataRepository,
+    private val ioDispatcher: CoroutineDispatcher
+): ViewModel() {
 
 
-    var exercises: SnapshotStateList<Exercise> = mutableStateListOf()
+    var uiState by mutableStateOf(ExercisesUiState())
+
+    fun getExercises(bodyPartId: Int) {
+        viewModelScope.launch(ioDispatcher){
+            uiState = uiState.copy(loading = true)
+            repo.getExercises(bodyPartId).collect{ exs ->
+                uiState = uiState.copy(exercises = exs.map {
+                    Pair(it, repo.getLatestDetails(it.id!!))
+                })
+                uiState = uiState.copy(loading = false)
+            }
+        }
+    }
+
     fun onExerciseMove(
-        path: String,
         fromIndex: Int,
         toIndex: Int
     ) {
-        onItemMove(exercises, fromIndex, toIndex)
-        saveExercises(path, exercises)
-    }
-
-    fun getExercises(bodyPart: String) {
         viewModelScope.launch(ioDispatcher) {
-            exercises.clear()
-            exercises.addAll(getItems<Exercise>(bodyPart))
+            val tempPos = -1
+            val fromPos = uiState.exercises[fromIndex].first.position
+            val toPos = uiState.exercises[toIndex].first.position
+            repo.updateExercise(uiState.exercises[fromIndex].first.copy(position = tempPos))
+            repo.updateExercise(uiState.exercises[toIndex].first.copy(position = fromPos))
+            repo.updateExercise(uiState.exercises[fromIndex].first.copy(position = toPos))
         }
     }
 
-    fun addExercise(exercise: Exercise) {
-        if (exercise.name !in exercises.map { it.name }) {
-            exercises.add(0, exercise)
-            saveExercises(exercise.bodyPart, exercises)
+    fun addExercise(exercise: Exercise): Boolean {
+        if (exercise.name !in uiState.exercises.map { it.first.name }) {
+            viewModelScope.launch(ioDispatcher) {
+                repo.updateExercise(exercise)
+            }
+            return true
         }
+        return false
     }
 
-    fun editExercise(newName: String, exercise: Exercise) {
-        val index = exercises.indexOfFirst {
-            it.name == exercise.name
-        }
-        if (index != -1) {
-            exercises[index] = exercises[index].copy(name = newName)
-            saveExercises(exercise.bodyPart, exercises)
-        }
+    fun editExercise(newName: String, exercise: Exercise): Boolean {
+        return addExercise(exercise.copy(name = newName))
     }
 
     fun deleteExercise(exercise: Exercise) {
         viewModelScope.launch(ioDispatcher) {
-            isLoading.value = true
-            repo.deleteValue(Path(exercise.bodyPart, exercise.id).get())
-            exercises.remove(exercise)
-            repo.saveList(exercise.bodyPart, exercises)
-            isLoading.value = false
+            repo.deleteExercise(exercise)
         }
     }
 
+    fun getDetailsForGraph(exercise: Exercise, loading: MutableState<Boolean>, details: MutableState<List<ExerciseDetails>>){
+        viewModelScope.launch(ioDispatcher) {
+            loading.value = true
+            repo.getExerciseDetails(exercise.id!!).collect{
+                details.value = it
+                loading.value = false
+            }
+        }
+    }
 
+    fun updateTitle(bpId: Int, onComplete: (Int) -> Unit) {
+        viewModelScope.launch(ioDispatcher) {
+            onComplete(repo.getBodyPart(bpId).label)
+        }
+    }
 
 }

@@ -10,7 +10,7 @@ fun FormDialog(
     onCalendarClick: () -> Unit = {},
     onDelete: (() -> Unit)? = null,
     onDismiss: () -> Unit = {},
-    onConfirm: () -> Unit = {},
+    onConfirm: () -> Boolean = {true},
 ) {
     Dialog(
         onDismissRequest = onDismiss
@@ -21,8 +21,9 @@ fun FormDialog(
             onCalendarClick = onCalendarClick,
             onCancelClick = onDismiss,
             onSaveClick = {
-                onConfirm()
-                onDismiss()
+                if (onConfirm()) {
+                    onDismiss()
+                }
             },
             onDeleteClick = onDelete
         )

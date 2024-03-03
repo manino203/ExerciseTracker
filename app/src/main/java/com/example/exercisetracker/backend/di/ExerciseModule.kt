@@ -1,8 +1,11 @@
 package com.example.exercisetracker.backend.di
 
 import android.content.Context
+import androidx.room.Room
 import com.example.exercisetracker.R
-import com.example.exercisetracker.backend.data.ExerciseDataRepository
+import com.example.exercisetracker.backend.data.LegacyDataRepository
+import com.example.exercisetracker.backend.data.db.ExerciseDataRepository
+import com.example.exercisetracker.backend.data.db.ExerciseDatabase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -22,18 +25,31 @@ object ExerciseModule {
 
     @Singleton
     @Provides
-    fun provideExerciseDataRepository(
+    fun provideLegacyDataRepository(
         @ApplicationContext app: Context,
         gson: Gson
-    ): ExerciseDataRepository {
-        return ExerciseDataRepository(app, gson)
+    ): LegacyDataRepository {
+        return LegacyDataRepository(app, gson)
     }
 
     @Provides
     fun provideIODispatcher() = Dispatchers.IO
 
     @Provides
-    fun provideTitle(@ApplicationContext context: Context) = context.resources.getString(R.string.app_name)
+    fun provideTitle(@ApplicationContext context: Context) =
+        context.resources.getString(R.string.app_name)
+
+
+    @Singleton
+    @Provides
+    fun provideExerciseDataRepository(@ApplicationContext context: Context) =
+        ExerciseDataRepository(
+            Room.databaseBuilder(
+                context,
+                ExerciseDatabase::class.java,
+                "exercise_tracker.db"
+            ).build()
+        )
 }
 
 

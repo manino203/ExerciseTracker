@@ -16,7 +16,7 @@ import java.io.FileWriter
 import java.io.IOException
 
 
-class ExerciseDataRepository(
+class LegacyDataRepository(
     val context: Context,
     val gson: Gson
 ) {

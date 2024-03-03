@@ -4,13 +4,28 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,8 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.exercisetracker.R
-import com.example.exercisetracker.backend.data.Exercise
-import com.example.exercisetracker.backend.data.ExerciseDetails
+import com.example.exercisetracker.backend.data.db.entities.Exercise
+import com.example.exercisetracker.backend.data.db.entities.ExerciseDetails
 import com.example.exercisetracker.frontend.composables.utils.Item
 import com.example.exercisetracker.frontend.composables.utils.dialogs.ExerciseDialogForm
 import com.example.exercisetracker.frontend.composables.utils.dialogs.FormDialog
@@ -31,15 +46,15 @@ import com.example.exercisetracker.frontend.composables.utils.dialogs.rememberFo
 @Composable
 fun ExerciseItem(
     modifier: Modifier = Modifier,
-    exercise: Exercise,
+    exercise: Pair<Exercise, ExerciseDetails?>,
     onDelete: (Exercise) -> Unit,
-    editItem: (String, Exercise) -> Unit,
+    editItem: (String, Exercise) -> Boolean,
     onClick: (Exercise) -> Unit,
     dragModifier: Modifier? = null,
     elevation: State<Dp>,
     isExpanded: MutableState<Boolean> = mutableStateOf(false),
     canExpand: MutableState<Boolean> = mutableStateOf(true),
-    onExpand: (Exercise, MutableState<Boolean>, SnapshotStateList<ExerciseDetails>) -> Unit
+    onExpand: (Exercise, MutableState<Boolean>, MutableState<List<ExerciseDetails>>) -> Unit
 ) {
 
     val graphLoading = remember {
@@ -47,27 +62,27 @@ fun ExerciseItem(
     }
 
     val exerciseDetails = remember {
-        mutableStateListOf<ExerciseDetails>()
+        mutableStateOf<List<ExerciseDetails>>(emptyList())
     }
 
     var dialogOpen by remember {
         mutableStateOf(false)
     }
 
-    val formState = rememberFormState(form = ExerciseDialogForm(exercise))
+    val formState = rememberFormState(form = ExerciseDialogForm(exercise.first))
 
     if (dialogOpen) {
         FormDialog(
             formState = formState,
             onDelete = {
-                onDelete(exercise)
+                onDelete(exercise.first)
                 dialogOpen = false
             },
             onDismiss = {
                 dialogOpen = false
             },
             onConfirm = {
-                editItem(formState.values.first().value, exercise)
+                editItem(formState.values.first().value, exercise.first)
             }
         )
     }
@@ -81,11 +96,11 @@ fun ExerciseItem(
                 exercise = exercise,
                 isExpanded = isExpanded.value,
                 modifier = modifier.then(it),
-                onClick = { onClick(exercise) },
+                onClick = { onClick(exercise.first) },
                 onLongClick = { dialogOpen = true }
             ) {
                 isExpanded.value = !isExpanded.value
-                onExpand(exercise, graphLoading, exerciseDetails)
+                onExpand(exercise.first, graphLoading, exerciseDetails)
             }
         }
     ) {
@@ -100,11 +115,7 @@ fun ExerciseItem(
         } else {
             ProgressGraph(
                 Modifier.fillMaxSize(),
-                details = exerciseDetails.apply {
-                    sortBy {
-                        it.timestamp
-                    }
-                }
+                details = exerciseDetails.value
             )
         }
     }
@@ -116,12 +127,14 @@ private fun ExerciseItem(
     modifier: Modifier = Modifier,
     dragModifier: Modifier?,
     elevation: State<Dp>,
-    exercise: Exercise,
+    exercise: Pair<Exercise, ExerciseDetails?>,
     isExpanded: Boolean,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onExpand: () -> Unit
 ){
+
+
     Item(
         modifier,
         contentModifier =
@@ -147,7 +160,7 @@ private fun ExerciseItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = exercise.name
+                    text = exercise.first.name
                 )
             }
             Divider()
@@ -165,7 +178,7 @@ private fun ExerciseItem(
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                     )
                     Text(
-                        (if (exercise.latestDetails != null) "${exercise.latestDetails.weight} kg" else "").toString(),
+                        (if (exercise.second != null) "${exercise.second!!.weight} kg" else "").toString(),
                     )
                 }
                 Column(
@@ -179,7 +192,7 @@ private fun ExerciseItem(
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                     )
                     Text(
-                        (exercise.latestDetails?.reps ?: "").toString(),
+                        (exercise.second?.reps ?: "").toString(),
                     )
                 }
                 Column(
@@ -193,7 +206,7 @@ private fun ExerciseItem(
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                     )
                     Text(
-                        (exercise.latestDetails?.series ?: "").toString(),
+                        (exercise.second?.series ?: "").toString(),
                     )
                 }
                 Icon(

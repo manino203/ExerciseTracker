@@ -6,10 +6,10 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
@@ -17,9 +17,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.exercisetracker.R
-import com.example.exercisetracker.backend.data.DataClassFactory
-import com.example.exercisetracker.backend.data.ExerciseDetails
-import com.example.exercisetracker.backend.data.Path
+import com.example.exercisetracker.backend.data.db.DataClassFactory
+import com.example.exercisetracker.backend.data.db.entities.ExerciseDetails
 import com.example.exercisetracker.backend.viewmodels.DetailsViewModel
 import com.example.exercisetracker.backend.viewmodels.ToolbarViewModel
 import com.example.exercisetracker.frontend.composables.Screen
@@ -44,36 +43,31 @@ fun NavGraphBuilder.ExerciseDetailsScreen(
         Route.ExerciseDetails.args
     ) {
         val viewModel: DetailsViewModel = hiltViewModel()
-        val bodyPart by remember { mutableStateOf(it.arguments?.getString(Route.ExerciseDetails.args[0].name)!!) }
-        val exercise by remember { mutableStateOf(it.arguments?.getString(Route.ExerciseDetails.args[1].name)!!) }
-        val path by remember {
-            mutableStateOf(Path(bodyPart, exercise))
-        }
+        val uiState = viewModel.detailsUiState
+        val exerciseId by remember { mutableIntStateOf(it.arguments?.getInt(Route.ExerciseDetails.args[0].name)!!) }
         val appName = stringResource(id = R.string.app_name)
         LaunchedEffect(Unit){
-            toolbarViewModel.onScreenChange(Route.ExerciseDetails, it.arguments?.getString(Route.ExerciseDetails.args[2].name) ?: appName)
             viewModel.getDetails(
-                Path(
-                    bodyPart,
-                    exercise
-                )
+                exerciseId
             )
+            toolbarViewModel.onScreenChange(Route.ExerciseDetails, uiState.exercise?.name ?: appName)
         }
 
-        LaunchedEffect(viewModel.isLoading.value){
-            toolbarViewModel.updateLoading(viewModel.isLoading.value)
+        LaunchedEffect(uiState.loading){
+            toolbarViewModel.updateLoading(uiState.loading)
         }
 
         ExerciseDetailsScreen(
-            detailsList = viewModel.details,
+            detailsList = uiState.details,
+            exerciseId = exerciseId,
             addItem = {
-                viewModel.addDetail(path, it)
+                viewModel.addDetail(it)
             },
-            editItem = { detail, index ->
-                viewModel.editDetail(detail, index, path)
+            editItem = { detail ->
+                viewModel.editDetail(detail)
             }
         ) {
-            viewModel.deleteDetail(it, path)
+            viewModel.deleteDetail(uiState.details[it])
         }
     }
 }
@@ -81,9 +75,10 @@ fun NavGraphBuilder.ExerciseDetailsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ExerciseDetailsScreen(
-    detailsList: SnapshotStateList<ExerciseDetails>,
+    detailsList: List<ExerciseDetails>,
+    exerciseId: Int,
     addItem: (ExerciseDetails) -> Unit,
-    editItem: (ExerciseDetails, Int) -> Unit,
+    editItem: (ExerciseDetails) -> Unit,
     deleteItem: (Int) -> Unit
 ) {
 
@@ -109,8 +104,9 @@ private fun ExerciseDetailsScreen(
             onDismiss = { dialogOpen = false }
         ) {
             addItem(
-                DataClassFactory.createExerciseDetails(formState.values.map { it.value })
+                DataClassFactory.createExerciseDetails(formState.values.map { it.value }, exerciseId)
             )
+            true
         }
     }
     if (calendarOpen) {
@@ -147,6 +143,7 @@ private fun ExerciseDetailsScreen(
                     .fillMaxWidth(),
                 details,
                 index,
+                exerciseId,
                 elevation,
                 deleteItem,
                 editItem
