@@ -9,4 +9,5 @@
 .cxx
 local.properties
 /github_token.txt
-/.idea/
+.idea
+.github
