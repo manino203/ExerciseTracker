@@ -45,12 +45,14 @@ class ExercisesViewModel @Inject constructor(
         toIndex: Int
     ) {
         viewModelScope.launch(ioDispatcher) {
-            val tempPos = -1
-            val fromPos = uiState.exercises[fromIndex].first.position
-            val toPos = uiState.exercises[toIndex].first.position
-            repo.updateExercise(uiState.exercises[fromIndex].first.copy(position = tempPos))
-            repo.updateExercise(uiState.exercises[toIndex].first.copy(position = fromPos))
-            repo.updateExercise(uiState.exercises[fromIndex].first.copy(position = toPos))
+            if (fromIndex in uiState.exercises.indices && toIndex in uiState.exercises.indices){
+                val tempPos = -1
+                val fromPos = uiState.exercises[fromIndex].first.position
+                val toPos = uiState.exercises[toIndex].first.position
+                repo.updateExercise(uiState.exercises[fromIndex].first.copy(position = tempPos))
+                repo.updateExercise(uiState.exercises[toIndex].first.copy(position = fromPos))
+                repo.updateExercise(uiState.exercises[fromIndex].first.copy(position = toPos))
+            }
         }
     }
 

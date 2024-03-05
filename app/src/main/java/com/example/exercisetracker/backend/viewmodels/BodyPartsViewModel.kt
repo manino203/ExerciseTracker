@@ -56,13 +56,14 @@ class BodyPartsViewModel @Inject constructor(
         toIndex: Int
     ) {
         viewModelScope.launch(ioDispatcher) {
-            val tempPos = -1
-            val fromPos = uiState.bodyParts[fromIndex].position
-            val toPos = uiState.bodyParts[toIndex].position
-            repo.updateBodyPart(uiState.bodyParts[fromIndex].copy(position = tempPos))
-            repo.updateBodyPart(uiState.bodyParts[toIndex].copy(position = fromPos))
-            repo.updateBodyPart(uiState.bodyParts[fromIndex].copy(position = toPos))
-
+            if (fromIndex in uiState.bodyParts.indices && toIndex in uiState.bodyParts.indices){
+                val tempPos = -1
+                val fromPos = uiState.bodyParts[fromIndex].position
+                val toPos = uiState.bodyParts[toIndex].position
+                repo.updateBodyPart(uiState.bodyParts[fromIndex].copy(position = tempPos))
+                repo.updateBodyPart(uiState.bodyParts[toIndex].copy(position = fromPos))
+                repo.updateBodyPart(uiState.bodyParts[fromIndex].copy(position = toPos))
+            }
         }
     }
 }
