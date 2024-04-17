@@ -1,6 +1,6 @@
-# Fitness Progress Tracker
+# Exercise Tracker
 
-Fitness Progress Tracker is an Android application designed to help users, including myself and my friends, track our fitness progress efficiently. This app utilizes the Room database to persistently store data, ensuring that our fitness journey is documented and accessible at all times.
+Exercise Tracker is an Android application I made for me and my friends to track our fitness progress efficiently. This app utilizes the Room database to persistently store data, ensuring that our fitness journey is documented and accessible at all times.
 
 ## Features
 
