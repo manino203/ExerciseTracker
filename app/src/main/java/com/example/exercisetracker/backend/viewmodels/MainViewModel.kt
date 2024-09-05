@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.exercisetracker.backend.data.LegacyDataRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -16,8 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repo: LegacyDataRepository,
-    private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
+    private val ioDispatcher = Dispatchers.IO
+
 
     val isLoading = mutableStateOf(false)
 

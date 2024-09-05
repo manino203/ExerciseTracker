@@ -33,9 +33,6 @@ object ExerciseModule {
     }
 
     @Provides
-    fun provideIODispatcher() = Dispatchers.IO
-
-    @Provides
     fun provideTitle(@ApplicationContext context: Context) =
         context.resources.getString(R.string.app_name)
 

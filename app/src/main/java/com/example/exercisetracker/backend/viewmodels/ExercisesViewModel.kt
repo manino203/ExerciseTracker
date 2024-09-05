@@ -11,6 +11,7 @@ import com.example.exercisetracker.backend.data.db.entities.Exercise
 import com.example.exercisetracker.backend.data.db.entities.ExerciseDetails
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,9 +23,8 @@ data class ExercisesUiState(
 @HiltViewModel
 class ExercisesViewModel @Inject constructor(
     private val repo: ExerciseDataRepository,
-    private val ioDispatcher: CoroutineDispatcher
 ): ViewModel() {
-
+    private val ioDispatcher = Dispatchers.IO
 
     var uiState by mutableStateOf(ExercisesUiState())
 

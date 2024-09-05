@@ -10,6 +10,7 @@ import com.example.exercisetracker.backend.data.db.ExerciseDataRepository
 import com.example.exercisetracker.backend.data.db.entities.BodyPart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,9 +22,8 @@ data class BodyPartsUiState(
 @HiltViewModel
 class BodyPartsViewModel @Inject constructor(
     private val repo: ExerciseDataRepository,
-    private val ioDispatcher: CoroutineDispatcher
 ): ViewModel() {
-
+    private val ioDispatcher = Dispatchers.IO
 
     private val DEFAULT_BODY_PARTS = listOf(
         BodyPart("Biceps", 0, R.string.biceps),
